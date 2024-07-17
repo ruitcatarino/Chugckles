@@ -5,7 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: drink_safely
-    depends_on: [db]
+    depends_on:
+      db:
+        condition: service_started
     ports:
       - 8000:8000
     volumes:
