@@ -30,7 +30,3 @@ async def login(user_model: UserModel):
         raise HTTPException(status_code=406, detail=f"Error on Login")
     return {"messages": f"Logged in as {user}"}
 
-
-@router.get("/test")
-async def test():
-    return {"messages": await User.all()}
