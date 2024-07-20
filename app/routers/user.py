@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 @router.post("/register")
-async def register(user_model: UserPydantic):
+async def register(user_model: UserSchema):
     if await User.exists(username=user_model.username):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
