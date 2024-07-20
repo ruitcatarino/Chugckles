@@ -3,10 +3,14 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
-from models.user import User, UserPydantic
+from models.user import User
+from utils.schemas import UserSchema
 from utils.settings import settings
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 
 class TokenException(HTTPException):
@@ -42,32 +46,22 @@ async def decode_token(token: str) -> dict:
         raise TokenException()
 
 
-def jwt_required():
-    def wrapper(func):
-        async def decorated(
-            credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
-        ):
-            token = credentials.credentials
-            payload = await decode_token(token)
+async def jwt_required(token: str = Depends(oauth2_scheme)) -> UserSchema:
+    payload = await decode_token(token)
 
-            username = payload.get("username")
-            exp_timestamp = payload.get("exp")
+    username = payload.get("username")
+    exp_timestamp = payload.get("exp")
 
-            if not username or not exp_timestamp:
-                raise TokenException()
+    if not username or not exp_timestamp:
+        raise TokenException
 
-            exp_datetime = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)
+    exp_datetime = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)
 
-            if datetime.now(timezone.utc) > exp_datetime:
-                raise TokenException()
+    if datetime.now(timezone.utc) > exp_datetime:
+        raise TokenException
 
-            user = await User.get_or_none(username=username)
-            if not user or user.disabled:
-                raise TokenException()
+    user = await User.get_or_none(username=username)
+    if user is None or user.disabled:
+        raise TokenException
 
-            user_pydantic = await UserPydantic.from_tortoise_orm(user)
-            return await func(user_pydantic)
-
-        return decorated
-
-    return wrapper
+    return await UserSchema.from_tortoise_orm(user)

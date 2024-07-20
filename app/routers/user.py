@@ -1,6 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
-from models.user import User, UserPydantic
+from fastapi import APIRouter, Depends, HTTPException, status
+from models.user import User
+from utils.schemas import UserSchema
 from utils.token import generate_token, jwt_required
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(
     prefix="/user",
@@ -19,10 +21,10 @@ async def register(user_model: UserPydantic):
     return {"message": f"User {user.username} created"}
 
 
-@router.get("/login")
-async def login(user_model: UserPydantic):
-    user = await User.filter(username=user_model.username).first()
-    if user is None or not await user.check_password(user_model.password):
+@router.post("/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = await User.get_or_none(username=form_data.username)
+    if user is None or not await user.check_password(form_data.password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Error on Login"
         )
@@ -33,6 +35,7 @@ async def login(user_model: UserPydantic):
 
 
 @router.get("/test")
-@jwt_required()
-async def test(user: UserPydantic):
+async def test(
+    user: UserSchema = Depends(jwt_required),
+):
     return {"message": f"Logged {user.username}"}
