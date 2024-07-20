@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from routers import user
+from routers import ROUTERS
 from tortoise.contrib.fastapi import register_tortoise
 from utils.database import TORTOISE_ORM, init_db, close_db
 
@@ -16,7 +16,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(user.router)
+
+for router in ROUTERS:
+    app.include_router(router)
 
 app.add_middleware(
     CORSMiddleware,
