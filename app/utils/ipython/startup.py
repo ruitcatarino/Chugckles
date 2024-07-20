@@ -7,5 +7,5 @@ asyncio.set_event_loop(loop)
 
 loop.run_until_complete(init_db())
 
-def q(coro):
+def arun(coro):
     return loop.run_until_complete(coro)
