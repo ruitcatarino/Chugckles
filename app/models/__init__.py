@@ -1,3 +1,3 @@
-from .user import User
+from .user import User, UserPydantic
 
 __models__ = [User]

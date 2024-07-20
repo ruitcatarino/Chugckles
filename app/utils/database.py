@@ -1,5 +1,5 @@
 from tortoise import Tortoise
-from settings import settings
+from utils.settings import settings
 
 TORTOISE_ORM = {
     "connections": {
