@@ -9,4 +9,9 @@ class Card(Model):
 
     class Meta:
         table = "cards"
-        unique_together = (("challenge", "deck"),)
+
+    def __str__(self):
+        return f"Card#{self.id}@{self.deck.name}: {self.challenge}"
+    
+    def __repr__(self):
+        return str(self)
