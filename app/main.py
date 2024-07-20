@@ -2,19 +2,29 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from routers import user
 from tortoise.contrib.fastapi import register_tortoise
-from utils.database import TORTOISE_ORM, init_db
+from utils.database import TORTOISE_ORM, init_db, close_db
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
+    await close_db()
 
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(user.router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 favicon_path = "favicon.ico"
 

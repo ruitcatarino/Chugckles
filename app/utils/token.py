@@ -5,7 +5,7 @@ import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt.exceptions import InvalidTokenError
-from models import User, UserPydantic
+from models.user import User, UserPydantic
 from utils.settings import settings
 
 
@@ -19,7 +19,7 @@ class TokenException(HTTPException):
 
 
 async def generate_token(username: str):
-    expiration = datetime.now(timezone.utc) + timedelta(seconds=settings.jwt_validity)
+    expiration = datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_validity)
     payload = {
         "username": username,
         "exp": expiration,
@@ -56,7 +56,9 @@ def jwt_required():
             if not username or not exp_timestamp:
                 raise TokenException()
 
-            if datetime.now(timezone.utc) > exp_timestamp:
+            exp_datetime = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)
+
+            if datetime.now(timezone.utc) > exp_datetime:
                 raise TokenException()
 
             user = await User.get_or_none(username=username)

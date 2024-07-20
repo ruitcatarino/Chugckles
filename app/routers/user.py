@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from models import User, UserPydantic
+from models.user import User, UserPydantic
 from utils.token import generate_token, jwt_required
 
 router = APIRouter(
@@ -16,7 +16,7 @@ async def register(user_model: UserPydantic):
             detail=f"Username {user_model.username} already taken",
         )
     user = await User.create(username=user_model.username, password=user_model.password)
-    return {"message": f"User {user} created"}
+    return {"message": f"User {user.username} created"}
 
 
 @router.get("/login")
@@ -27,7 +27,7 @@ async def login(user_model: UserPydantic):
             status_code=status.HTTP_400_BAD_REQUEST, detail="Error on Login"
         )
     return {
-        "message": f"Logged in as {user}",
+        "message": f"Logged in as {user.username}",
         "token": await generate_token(username=user.username),
     }
 
@@ -35,4 +35,4 @@ async def login(user_model: UserPydantic):
 @router.get("/test")
 @jwt_required()
 async def test(user: UserPydantic):
-    return {"message": f"Logged {user}"}
+    return {"message": f"Logged {user.username}"}

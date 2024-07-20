@@ -16,7 +16,6 @@ services:
       DB_USER: "user"
       DB_PASSWORD: "password"
       DB_NAME: "mydatabase"
-      JWT_SECRET_KEY: 1
 
   db:
     image: postgres:16

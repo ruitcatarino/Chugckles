@@ -3,6 +3,7 @@ import hashlib
 from tortoise import fields
 from tortoise.contrib.pydantic import pydantic_model_creator
 from tortoise.models import Model
+from models.game import Game
 
 
 class User(Model):
@@ -10,6 +11,7 @@ class User(Model):
     username = fields.CharField(max_length=50, unique=True)
     password = fields.CharField(max_length=130)
     disabled = fields.BooleanField()
+    games: fields.ReverseRelation["Game"]
 
     class Meta:
         table = "users"
