@@ -10,11 +10,11 @@ router = APIRouter(
 
 
 @router.post("/create")
-async def create_deck(
-    deck_body: DeckSchema, _: UserSchema = Depends(jwt_required)
-):
+async def create_deck(deck_body: DeckSchema, _: UserSchema = Depends(jwt_required)):
     if await Deck.exists(name=deck_body.name):
-        raise HTTPException(status_code=404, detail=f"Deck with {deck_body.name} already exists")
+        raise HTTPException(
+            status_code=404, detail=f"Deck with {deck_body.name} already exists"
+        )
     deck = await Deck.create(name=deck_body.name)
     return {"message": f"{deck} created"}
 
@@ -27,16 +27,13 @@ async def list_all_decks(_: UserSchema = Depends(jwt_required)):
             "id": deck.id,
             "name": deck.name,
             "cards": [
-                {
-                    "id": card.id,
-                    "challenge": card.challenge
-                }
-                for card in deck.cards
-            ]
+                {"id": card.id, "challenge": card.challenge} for card in deck.cards
+            ],
         }
         for deck in decks
     ]
     return {"payload": decks_list, "message": "All decks listed"}
+
 
 @router.put("/edit")
 async def edit_card(deck_body: DeckEditSchema, _: UserSchema = Depends(jwt_required)):
@@ -46,6 +43,7 @@ async def edit_card(deck_body: DeckEditSchema, _: UserSchema = Depends(jwt_requi
     deck.name = deck_body.new_name
     await deck.save()
     return {"message": f"{deck} edited"}
+
 
 @router.delete("/delete")
 async def delete_deck(deck_body: DeckSchema, _: UserSchema = Depends(jwt_required)):
