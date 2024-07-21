@@ -12,7 +12,6 @@ from utils.settings import settings
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-
 class TokenException(HTTPException):
     def __init__(self):
         super().__init__(
