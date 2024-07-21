@@ -5,7 +5,7 @@ from utils.schemas import CardCreationSchema, CardIdSchema, CardEditSchema, User
 
 router = APIRouter(
     prefix="/card",
-    tags=["card"],
+    tags=["Card"],
 )
 
 
