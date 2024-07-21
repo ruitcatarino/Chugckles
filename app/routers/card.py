@@ -34,6 +34,7 @@ async def list_all_cards(_: UserSchema = Depends(jwt_required)):
     ]
     return {"payload": cards_list, "message": "All cards listed"}
 
+
 @router.put("/edit")
 async def edit_card(card_body: CardEditSchema, _: UserSchema = Depends(jwt_required)):
     card = await Card.get_or_none(id=card_body.id)
@@ -42,6 +43,7 @@ async def edit_card(card_body: CardEditSchema, _: UserSchema = Depends(jwt_requi
     card.challenge = card_body.challenge
     await card.save()
     return {"message": f"Card#{card.id} edited"}
+
 
 @router.delete("/delete")
 async def delete_card(card_id: CardIdSchema, _: UserSchema = Depends(jwt_required)):
