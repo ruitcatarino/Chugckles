@@ -14,6 +14,10 @@ class CardEditSchema(BaseModel):
 class CardIdSchema(BaseModel):
     id: int
 
+class DeckEditSchema(BaseModel):
+    name: str
+    new_name: str
+
 CardSchema = pydantic_model_creator(Card, name="Card", exclude=("id", "deck"))
 DeckSchema = pydantic_model_creator(Deck, name="Deck", exclude=("id", "cards"))
 UserSchema = pydantic_model_creator(User, name="User", exclude=("id", "disabled"))
