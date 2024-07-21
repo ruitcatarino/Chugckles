@@ -34,3 +34,4 @@ class GameCreationSchema(BaseModel):
     name: str
     deck_names: List[str]
     players: List[str]
+    rounds: int

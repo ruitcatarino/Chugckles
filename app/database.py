@@ -1,7 +1,7 @@
 from tortoise import Tortoise
-from utils.settings import settings
+from settings import settings
 from models import Deck, Card
-from . import POPULATE_DATA
+from utils import POPULATE_DATA
 
 TORTOISE_ORM = {
     "connections": {

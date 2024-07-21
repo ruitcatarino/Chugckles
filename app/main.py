@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from routers import ROUTERS
 from tortoise.contrib.fastapi import register_tortoise
-from utils.database import TORTOISE_ORM, init_db, close_db
+from database import TORTOISE_ORM, init_db, close_db
 
 
 @asynccontextmanager

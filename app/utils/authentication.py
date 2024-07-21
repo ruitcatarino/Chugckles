@@ -6,10 +6,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from models.user import User
+from settings import settings
 from utils.schemas import UserSchema
-from utils.settings import settings
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 
 
 class TokenException(HTTPException):
