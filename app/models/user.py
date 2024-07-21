@@ -9,18 +9,16 @@ class User(Model):
     id = fields.IntField(pk=True)
     username = fields.CharField(max_length=50, unique=True)
     password = fields.CharField(max_length=130)
-    disabled = fields.BooleanField()
+    disabled = fields.BooleanField(default=False)
     games: fields.ReverseRelation["Game"]
 
     class Meta:
         table = "users"
 
     @classmethod
-    async def create(cls, username: str, password: str, disabled: bool = False):
+    async def create(cls, username: str, password: str):
         return await super().create(
-            username=username,
-            password=await cls._hash_password(password),
-            disabled=disabled,
+            username=username, password=await cls._hash_password(password)
         )
 
     async def check_password(self, password: str):
