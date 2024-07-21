@@ -9,7 +9,7 @@ from models.user import User
 from utils.schemas import UserSchema
 from utils.settings import settings
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/token")
 
 
 class TokenException(HTTPException):
