@@ -7,16 +7,20 @@ class CardCreationSchema(BaseModel):
     challenge: str
     deck_name: str
 
+
 class CardEditSchema(BaseModel):
     id: int
     challenge: str
 
+
 class CardIdSchema(BaseModel):
     id: int
+
 
 class DeckEditSchema(BaseModel):
     name: str
     new_name: str
+
 
 CardSchema = pydantic_model_creator(Card, name="Card", exclude=("id", "deck"))
 DeckSchema = pydantic_model_creator(Deck, name="Deck", exclude=("id", "cards"))
