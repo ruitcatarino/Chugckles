@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from models.user import User
-from utils.schemas import UserSchema
-from utils.token import generate_token, jwt_required
 from fastapi.security import OAuth2PasswordRequestForm
+from models.user import User
+from utils.authentication import generate_token
+from utils.schemas import UserSchema
 
 router = APIRouter(
     prefix="/user",
@@ -21,7 +21,7 @@ async def register(user_model: UserSchema):
     return {"message": f"User {user.username} created"}
 
 
-@router.post("/token")
+@router.post("/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await User.get_or_none(username=form_data.username)
     if user is None or not await user.check_password(form_data.password):
