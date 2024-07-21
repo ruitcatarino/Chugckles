@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from models import Card, Deck
 from utils.token import jwt_required
-from utils.schemas import CardCreationSchema, UserSchema
+from utils.schemas import CardCreationSchema, CardIdSchema, CardEditSchema, UserSchema
 
 router = APIRouter(
     prefix="/card",
@@ -17,4 +17,36 @@ async def create_card(
     if deck is None:
         raise HTTPException(status_code=404, detail="Deck not found")
     card = await Card.create(challenge=card_body.challenge, deck=deck)
-    return {"message": card}
+    return {"message": f"{card} created"}
+
+
+@router.get("/list")
+async def list_all_cards(_: UserSchema = Depends(jwt_required)):
+    cards = await Card.all().prefetch_related("deck")
+    cards_list = [
+        {
+            "id": card.id,
+            "deck_id": card.deck.id,
+            "deck_name": card.deck.name,
+            "challenge": card.challenge,
+        }
+        for card in cards
+    ]
+    return {"payload": cards_list, "message": "All cards listed"}
+
+@router.put("/edit")
+async def edit_card(card_body: CardEditSchema, _: UserSchema = Depends(jwt_required)):
+    card = await Card.get_or_none(id=card_body.id)
+    if card is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+    card.challenge = card_body.challenge
+    await card.save()
+    return {"message": f"Card#{card.id} edited"}
+
+@router.delete("/delete")
+async def delete_card(card_id: CardIdSchema, _: UserSchema = Depends(jwt_required)):
+    card = await Card.get_or_none(id=card_id.id)
+    if card is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+    await card.delete()
+    return {"message": f"{card} deleted"}
