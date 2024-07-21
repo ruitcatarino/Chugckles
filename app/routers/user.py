@@ -32,8 +32,3 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         "message": f"Logged in as {user.username}",
         "token": await generate_token(username=user.username),
     }
-
-
-@router.get("/test")
-async def test(user: UserSchema = Depends(jwt_required)):
-    return {"message": f"Logged {user.username}"}
