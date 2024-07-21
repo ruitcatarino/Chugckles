@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from models import Deck
+from models import Deck, Card
 from utils.schemas import DeckSchema, DeckEditSchema, UserSchema
 from utils.token import jwt_required
 
@@ -46,3 +46,11 @@ async def edit_card(deck_body: DeckEditSchema, _: UserSchema = Depends(jwt_requi
     deck.name = deck_body.new_name
     await deck.save()
     return {"message": f"{deck} edited"}
+
+@router.delete("/delete")
+async def delete_deck(deck_body: DeckSchema, _: UserSchema = Depends(jwt_required)):
+    deck = await Deck.get_or_none(name=deck_body.name)
+    if deck is None:
+        raise HTTPException(status_code=404, detail="Deck not found")
+    await deck.delete()
+    return {"message": f"{deck} deleted"}
