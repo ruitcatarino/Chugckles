@@ -9,7 +9,7 @@ from utils.exceptions import GameFinished
 
 class GameState(Model):
     id = fields.IntField(pk=True)
-    cards = fields.JSONField()
+    challanges = fields.JSONField()
     players = fields.JSONField()
     current_turn = fields.IntField()
     total_rounds = fields.IntField()
@@ -27,7 +27,7 @@ class GameState(Model):
         assert total_rounds > 0, "At least one round is required"
         random.shuffle(players)
         return await super().create(
-            cards=[card.challenge for card in _draw_cards(cards, total_rounds, len(players))],
+            challanges=[card.challenge for card in _draw_cards(cards, total_rounds, len(players))],
             players=players,
             total_rounds=min(total_rounds, len(cards) // len(players)),
             current_turn=current_turn,
@@ -49,13 +49,13 @@ class GameState(Model):
     def current_player(self) -> str:
         return self.players[self.current_turn % self.n_players]
 
-    async def next_turn(self) -> tuple[Card, str]:
+    async def next_turn(self) -> tuple[str, str]:
         if self.is_finished: 
             raise GameFinished
-        card = self.cards[self.current_turn]
+        challange = self.challanges[self.current_turn]
         self.current_turn += 1
         await self.save()
-        return card, self.current_player
+        return challange, self.current_player
 
 def _draw_cards(cards: list[Card], total_rounds: int, n_players: int) -> List[Card]:
     card_list = list(cards)

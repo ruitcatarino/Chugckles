@@ -49,8 +49,8 @@ async def play_game(
             status_code=404, detail=f"Game with {game_info.name} already ended"
         )
     try:
-        card, player = await game.get_next_turn()
-        return {"message": "Sucessfully played", "card": card, "player": player}
+        challange, player = await game.get_next_turn()
+        return {"message": "Sucessfully played", "challange": challange, "player": player}
     except GameFinished:
         await game.finish()
         return {"message": "Game finished"}
@@ -71,7 +71,7 @@ async def list_user_games(user: UserSchema = Depends(jwt_required)):
             "name": game.name,
             "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
             "is_finished": game.finished,
-            "cards": state.cards,
+            "challanges": state.challanges,
             "current_round": state.current_round,
             "total_rounds": state.total_rounds,
         }
