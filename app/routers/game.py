@@ -30,7 +30,7 @@ async def start_game(
     except AssertionError as e:
         raise HTTPException(
             status_code=404,
-            detail=e,
+            detail=str(e),
         )
     return {"message": f"{game} created"}
 
