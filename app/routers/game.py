@@ -40,7 +40,7 @@ async def play_game(
     game_info: GameNameSchema, user_info: UserSchema = Depends(jwt_required)
 ):
     user = await User.get(username=user_info.username)
-    if (game := await Game.get_or_none(name=game_info.name, creator=user)) is None:
+    if (game := await Game.get_or_none(name=game_info.name, creator=user, finished=False)) is None:
         raise HTTPException(
             status_code=404, detail=f"Game with {game_info.name} does not exists"
         )
