@@ -11,8 +11,8 @@ class Card(Model):
         table = "cards"
         unique_together = [("challenge", "deck")]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Card#{self.id}: {self.challenge}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)

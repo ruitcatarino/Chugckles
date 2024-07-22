@@ -11,8 +11,8 @@ class Deck(Model):
     class Meta:
         table = "decks"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)

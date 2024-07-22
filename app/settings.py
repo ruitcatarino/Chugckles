@@ -1,8 +1,9 @@
 import os
+from typing import Any
 
 
 class Settings:
-    def __init__(self):
+    def __init__(self) -> None:
         self.db_user = os.getenv("DB_USER")
         self.db_password = os.getenv("DB_PASSWORD")
         self.db_name = os.getenv("DB_NAME")
@@ -15,7 +16,7 @@ class Settings:
         self.jwt_validity = int(os.getenv("JWT_VALIDITY", 7200))
         self.jwt_algorithm = os.getenv("JWT_ALGORITHM", "HS256")
 
-    def __getattr__(self, name):
+    def __getattr__(self, name) -> Any:
         raise AttributeError(
             f"'{self.__class__.__name__}' object has no attribute '{name}'"
         )

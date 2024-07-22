@@ -30,7 +30,7 @@ class Game(Model):
         creator: User,
         deck_names: List[str],
         total_rounds: int,
-    ):
+    ) -> "Game":
         players.append(creator.username)
         try:
             decks = await Deck.filter(name__in=deck_names).prefetch_related("cards")
@@ -52,13 +52,14 @@ class Game(Model):
         await game.cards.add(*cards)
         return game
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    async def finish(self):
+    async def finish(self) -> None:
         self.finished = True
+        await self.save()
 
-    async def get_next_turn(self):
+    async def get_next_turn(self) -> tuple[str, str]:
         if self.finished:
             raise GameFinished
 
