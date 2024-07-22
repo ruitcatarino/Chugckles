@@ -30,8 +30,12 @@ class DeckEditSchema(BaseModel):
     new_name: str
 
 
-class GameCreationSchema(BaseModel):
+class GameStartSchema(BaseModel):
     name: str
     deck_names: List[str]
     players: List[str]
-    rounds: int
+    total_rounds: int
+
+
+class GameNameSchema(BaseModel):
+    name: str

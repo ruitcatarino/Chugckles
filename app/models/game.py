@@ -1,5 +1,11 @@
-from tortoise.models import Model
+from typing import List
+
+from models.deck import Deck
+from models.game_state import GameState
+from models.user import User
 from tortoise import fields
+from tortoise.models import Model
+from utils.exceptions import GameFinished
 
 
 class Game(Model):
@@ -7,18 +13,59 @@ class Game(Model):
     name = fields.CharField(max_length=255, unique=True)
     creator = fields.ForeignKeyField("models.User", related_name="games")
     decks = fields.ManyToManyField("models.Deck", related_name="decks")
-    num_players = fields.IntField()
+    cards = fields.ManyToManyField("models.Card", related_name="cards")
+    state = fields.OneToOneField("models.GameState", related_name="game")
     players = fields.JSONField()
-    state = fields.JSONField()
     created_at = fields.DatetimeField(auto_now_add=True)
     finished = fields.BooleanField(default=False)
 
     class Meta:
         table = "games"
 
+    @classmethod
+    async def create(
+        cls,
+        name: str,
+        players: List[str],
+        creator: User,
+        deck_names: List[str],
+        total_rounds: int,
+    ):
+        players.append(creator.username)
+        try:
+            decks = await Deck.filter(name__in=deck_names).prefetch_related("cards")
+            missing_decks = set(deck_names) - {deck.name for deck in decks}
+            assert not missing_decks, f"Decks {missing_decks} not found"
+            cards = [card for deck in decks for card in deck.cards]
+            state = await GameState.create(
+                cards=cards, players=players, total_rounds=total_rounds
+            )
+        except AssertionError as e:
+            raise e
+        game = await super().create(
+            name=name,
+            creator=creator,
+            players=players,
+            state=state,
+        )
+        await game.decks.add(*decks)
+        await game.cards.add(*cards)
+        return game
+
     def __str__(self):
         return self.name
 
-    @property
-    async def is_finished(self):
-        return self.finished
+    async def finish(self):
+        self.finished = True
+
+    async def get_next_turn(self):
+        if self.finished:
+            raise GameFinished
+
+        try:
+            state = await self.state
+            card, player = await state.next_turn()
+            return card, player
+        except GameFinished:
+            self.is_finished = True
+            raise GameFinished
