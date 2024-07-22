@@ -64,8 +64,8 @@ class Game(Model):
 
         try:
             state = await self.state
-            card, player = await state.next_turn()
-            return card, player
+            challange, player = await state.next_turn()
+            return challange, player
         except GameFinished:
             self.is_finished = True
             raise GameFinished
