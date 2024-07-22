@@ -2,7 +2,6 @@ import hashlib
 
 from tortoise import fields
 from tortoise.models import Model
-from models.game import Game
 
 
 class User(Model):
@@ -10,7 +9,6 @@ class User(Model):
     username = fields.CharField(max_length=50, unique=True)
     password = fields.CharField(max_length=130)
     disabled = fields.BooleanField(default=False)
-    games: fields.ReverseRelation["Game"]
 
     class Meta:
         table = "users"
