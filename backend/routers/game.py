@@ -77,6 +77,30 @@ async def list_user_games(user: UserSchema = Depends(jwt_required)):
         }
         for game, state in zip(games, states)
     ]
+    return {"payload": games_list, "message": "Unfinished games listed"}
+
+
+@router.get("/list_all")
+async def list_all_user_games(user: UserSchema = Depends(jwt_required)):
+    user = await User.get(username=user.username)
+    games = (
+        await Game.filter(creator=user)
+        .prefetch_related("decks")
+        .all()
+    )
+    states = [await game.state for game in games]
+    games_list = [
+        {
+            "id": game.id,
+            "name": game.name,
+            "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
+            "is_finished": game.finished,
+            "challanges": state.challanges,
+            "current_round": state.current_round,
+            "total_rounds": state.total_rounds,
+        }
+        for game, state in zip(games, states)
+    ]
     return {"payload": games_list, "message": "All games listed"}
 
 
