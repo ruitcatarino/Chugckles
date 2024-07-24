@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from models import Deck, Card
+from models import Deck
 from utils.schemas import DeckSchema, DeckEditSchema, UserSchema
 from utils.authentication import jwt_required
 

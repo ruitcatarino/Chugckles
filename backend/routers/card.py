@@ -16,6 +16,10 @@ async def create_card(
     deck = await Deck.get_or_none(name=card_body.deck_name)
     if deck is None:
         raise HTTPException(status_code=404, detail="Deck not found")
+    if await Card.exists(challenge=card_body.challenge, deck=deck):
+        raise HTTPException(
+            status_code=404, detail="Card with these values already exists"
+        )
     card = await Card.create(challenge=card_body.challenge, deck=deck)
     return {"message": f"{card} created"}
 

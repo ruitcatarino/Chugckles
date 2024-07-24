@@ -11,7 +11,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - .:/src
+      - ./backend:/src/app
     environment:
       DB_USER: "user"
       DB_PASSWORD: "password"
