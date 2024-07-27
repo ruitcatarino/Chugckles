@@ -2,7 +2,7 @@ services:
 
   drink_safely:
     build:
-      context: .
+      context: ./backend/
       dockerfile: Dockerfile
     container_name: drink_safely
     depends_on:
@@ -30,6 +30,15 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
        - database_data:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - drink_safely
 
 volumes:
   database_data:
