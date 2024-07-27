@@ -5,7 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 WORKDIR /src/app
 
 COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /src/app/requirements.txt
 
 COPY . /src/app
 
