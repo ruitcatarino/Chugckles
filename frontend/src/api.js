@@ -21,17 +21,29 @@ export const login = async (username, password) => {
   const formData = new URLSearchParams();
   formData.append('username', username);
   formData.append('password', password);
-  
-  const response = await axios.post(`${API_URL}/user/login`, formData.toString(), {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
-  return response.data.token;
+  try {
+    const response = await axios.post(`${API_URL}/user/login`, formData.toString(), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    return response.data.token;
+  } catch (error) {
+    throw(error.response.data.detail);
+  }
 };
 
-export const register = (username, password) =>
-  api.post('/user/register', { username, password });
+export const register = async (username, password) =>{
+  try {
+    const response = await api.post('/user/register', {
+      username,
+      password,
+    });
+    return response.message;
+  } catch (error) {
+    throw(error.response.data.detail);
+  }
+};
 
 export const getDecks = () => api.get('/deck/list');
 

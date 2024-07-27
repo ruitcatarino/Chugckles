@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../api';
+import { register } from '../api';
 import "../styles/Form.css"
 import logo from '../assets/logo.png';
 
-const Login = () => {
+const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
     const navigate = useNavigate();
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      try {
-        const token = await login(username, password);
-        localStorage.setItem('token', token);
-        navigate('/games');
-      } catch (error) {
-        alert('Login failed: ' + error);
+      if (password !== passwordConfirm) {
+        alert('Passwords do not match');
+        return;
       }
-    };
-
-    const handleRegister = async (e) => {
-      e.preventDefault();
-      navigate('/register');
+      try {
+        await register(username, password);
+        navigate('/');
+      } catch (error) {
+        alert('Register failed: ' + error);
+      }
     };
   
     return (
@@ -42,11 +41,15 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
+        <input
+          className="form-input"
+          type="password"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          placeholder="Confirm Password"
+        />
         <div className="form-buttons">
-          <button type="submit" className="login-button">
-            Login
-          </button>
-          <button onClick={handleRegister} className="register-button">
+        <button type="submit" className="register-button">
             Register
           </button>
         </div>
@@ -54,4 +57,4 @@ const Login = () => {
     );
   };
   
-  export default Login;
+  export default Register;
