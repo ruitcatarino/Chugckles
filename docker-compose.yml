@@ -39,6 +39,8 @@ services:
       - "3000:3000"
     depends_on:
       - drink_safely
+    volumes:
+      - ./frontend:/app
 
 volumes:
   database_data:
