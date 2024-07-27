@@ -11,6 +11,10 @@ const Login = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
+      if (username.length === 0 || password.length === 0) {
+        alert('Please fill in all fields');
+        return;
+      }
       try {
         const token = await login(username, password);
         localStorage.setItem('token', token);

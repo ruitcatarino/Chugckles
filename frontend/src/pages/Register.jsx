@@ -12,6 +12,10 @@ const Register = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
+      if (username.length === 0 || password.length === 0 || passwordConfirm.length === 0) {
+        alert('Please fill in all fields');
+        return;
+      }
       if (password !== passwordConfirm) {
         alert('Passwords do not match');
         return;
@@ -22,6 +26,11 @@ const Register = () => {
       } catch (error) {
         alert('Register failed: ' + error);
       }
+    };
+
+    const handleLogin = async (e) => {
+      e.preventDefault();
+      navigate('/');
     };
   
     return (
@@ -49,8 +58,11 @@ const Register = () => {
           placeholder="Confirm Password"
         />
         <div className="form-buttons">
-        <button type="submit" className="register-button">
-            Register
+          <button onClick={handleLogin} className="login-button">
+              Login
+          </button>
+          <button type="submit" className="register-button">
+              Register
           </button>
         </div>
       </form>
