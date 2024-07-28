@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getGame, playGame } from '../api';
 import { useNavigate } from 'react-router-dom';
-import "../styles/GameList.css";
+import "../styles/Game.css";
 
 const Game = () => {
     const [game, setGame] = useState(null);
@@ -37,11 +37,16 @@ const Game = () => {
     }, []);
 
     return (
-        <div className="game-container">
-            <h1>{game?.name}</h1>
-            <p>Current Player: {currentPlayer}</p>
-            <p>Current Challenge: {currentChallenge}</p>
-            <button onClick={handlePlayGame}>Play Game</button>
+        <div className="game-page">
+            <button className="back-button" onClick={() => navigate('/games-list')}>Back to Games List</button>
+            <div className="game-container">
+                <h1 className="game-title">{game?.name}</h1>
+                <div className="game-info">
+                    <p><span>Current Player:</span> {currentPlayer}</p>
+                    <p><span>Current Challenge:</span> {currentChallenge}</p>
+                </div>
+                <button className="play-button" onClick={handlePlayGame}>Play Game</button>
+            </div>
         </div>
     );
 };
