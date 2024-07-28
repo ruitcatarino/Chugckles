@@ -24,6 +24,7 @@ class GameState(Model):
     ) -> "GameState":
         assert len(cards) > 0, "At least one card is required"
         assert len(players) > 0, "At least one player is required"
+        assert len(cards) >= len(players), "There must be at least as many cards as players"
         assert total_rounds > 0, "At least one round is required"
         random.shuffle(players)
         return await super().create(
@@ -56,10 +57,13 @@ class GameState(Model):
     async def next_turn(self) -> tuple[str, str]:
         if self.is_finished: 
             raise GameFinished
-        challange = self.challanges[self.current_turn]
+        challange = self.current_challenge
+        player = self.current_player
         self.current_turn += 1
+        if self.current_turn % self.n_players == 0:
+            random.shuffle(self.players)
         await self.save()
-        return challange, self.current_player
+        return challange, player
 
 def _draw_cards(cards: list[Card], total_rounds: int, n_players: int) -> List[Card]:
     card_list = list(cards)
