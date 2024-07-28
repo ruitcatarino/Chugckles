@@ -39,6 +39,22 @@ async def list_all_cards(_: UserSchema = Depends(jwt_required)):
     return {"payload": cards_list, "message": "All cards listed"}
 
 
+@router.get("/get")
+async def get_card(card_id: CardIdSchema, UserSchema=Depends(jwt_required)):
+    card = await Card.get_or_none(id=card_id.id).prefetch_related("deck")
+    if card is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+    return {
+        "payload": {
+            "id": card.id,
+            "deck_id": card.deck.id,
+            "deck_name": card.deck.name,
+            "challenge": card.challenge,
+        },
+        "message": "All cards listed",
+    }
+
+
 @router.put("/edit")
 async def edit_card(card_body: CardEditSchema, _: UserSchema = Depends(jwt_required)):
     card = await Card.get_or_none(id=card_body.id)

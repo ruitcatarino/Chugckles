@@ -40,7 +40,11 @@ async def play_game(
     game_info: GameNameSchema, user_info: UserSchema = Depends(jwt_required)
 ):
     user = await User.get(username=user_info.username)
-    if (game := await Game.get_or_none(name=game_info.name, creator=user, finished=False)) is None:
+    if (
+        game := await Game.get_or_none(
+            name=game_info.name, creator=user, finished=False
+        )
+    ) is None:
         raise HTTPException(
             status_code=404, detail=f"Game with {game_info.name} does not exists"
         )
@@ -50,7 +54,11 @@ async def play_game(
         )
     try:
         challange, player = await game.get_next_turn()
-        return {"message": "Sucessfully played", "challange": challange, "player": player}
+        return {
+            "message": "Sucessfully played",
+            "challange": challange,
+            "player": player,
+        }
     except GameFinished:
         await game.finish()
         return {"message": "Game finished"}
@@ -60,9 +68,7 @@ async def play_game(
 async def list_user_games(user: UserSchema = Depends(jwt_required)):
     user = await User.get(username=user.username)
     games = (
-        await Game.filter(creator=user, finished=False)
-        .prefetch_related("decks")
-        .all()
+        await Game.filter(creator=user, finished=False).prefetch_related("decks").all()
     )
     states = [await game.state for game in games]
     games_list = [
@@ -83,11 +89,7 @@ async def list_user_games(user: UserSchema = Depends(jwt_required)):
 @router.get("/list_all")
 async def list_all_user_games(user: UserSchema = Depends(jwt_required)):
     user = await User.get(username=user.username)
-    games = (
-        await Game.filter(creator=user)
-        .prefetch_related("decks")
-        .all()
-    )
+    games = await Game.filter(creator=user).prefetch_related("decks").all()
     states = [await game.state for game in games]
     games_list = [
         {
@@ -102,6 +104,31 @@ async def list_all_user_games(user: UserSchema = Depends(jwt_required)):
         for game, state in zip(games, states)
     ]
     return {"payload": games_list, "message": "All games listed"}
+
+
+@router.get("/get")
+async def get_game(game_info: GameNameSchema, user: UserSchema = Depends(jwt_required)):
+    user = await User.get(username=user.username)
+    game = await Game.get_or_none(name=game_info.name, creator=user, finished=False).prefetch_related("state", "decks")
+    if game is None:
+        raise HTTPException(
+            status_code=404, detail=f"Game with {game_info.name} not found"
+        )
+    return {
+        "payload": {
+            "id": game.id,
+            "name": game.name,
+            "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
+            "is_finished": game.finished,
+            "challanges": game.state.challanges,
+            "current_round": game.state.current_round,
+            "total_rounds": game.state.total_rounds,
+            "current_turn": game.state.current_turn,
+            "current_player": game.state.current_player,
+            "current_challange": game.state.current_challenge,
+        },
+        "message": "Game found",
+    }
 
 
 @router.post("/end")

@@ -30,6 +30,10 @@ class DeckEditSchema(BaseModel):
     new_name: str
 
 
+class DeckNameSchema(BaseModel):
+    name: str
+
+
 class GameStartSchema(BaseModel):
     name: str
     deck_names: List[str]

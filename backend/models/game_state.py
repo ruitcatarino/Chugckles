@@ -48,6 +48,10 @@ class GameState(Model):
     @property
     def current_player(self) -> str:
         return self.players[self.current_turn % self.n_players]
+    
+    @property
+    def current_challenge(self) -> str:
+        return self.challanges[self.current_turn]
 
     async def next_turn(self) -> tuple[str, str]:
         if self.is_finished: 
