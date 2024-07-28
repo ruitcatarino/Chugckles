@@ -56,8 +56,10 @@ async def play_game(
         challange, player = await game.get_next_turn()
         return {
             "message": "Sucessfully played",
-            "challange": challange,
-            "player": player,
+            "payload": {
+                "challange": challange,
+                "player": player,
+            },
         }
     except GameFinished:
         await game.finish()
@@ -107,13 +109,13 @@ async def list_all_user_games(user: UserSchema = Depends(jwt_required)):
 
 
 @router.get("/get")
-async def get_game(game_info: GameNameSchema, user: UserSchema = Depends(jwt_required)):
+async def get_game(game_name: str, user: UserSchema = Depends(jwt_required)):
     user = await User.get(username=user.username)
-    game = await Game.get_or_none(name=game_info.name, creator=user, finished=False).prefetch_related("state", "decks")
+    game = await Game.get_or_none(
+        name=game_name, creator=user, finished=False
+    ).prefetch_related("state", "decks")
     if game is None:
-        raise HTTPException(
-            status_code=404, detail=f"Game with {game_info.name} not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Game with {game_name} not found")
     return {
         "payload": {
             "id": game.id,

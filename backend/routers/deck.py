@@ -36,8 +36,8 @@ async def list_all_decks(_: UserSchema = Depends(jwt_required)):
 
 
 @router.get("/get")
-async def get_deck(deck_name: DeckNameSchema, _: UserSchema = Depends(jwt_required)):
-    deck = await Deck.get_or_none(name=deck_name.name).prefetch_related("cards")
+async def get_deck(deck_name: str, _: UserSchema = Depends(jwt_required)):
+    deck = await Deck.get_or_none(name=deck_name).prefetch_related("cards")
     if deck is None:
         raise HTTPException(status_code=404, detail="Deck not found")
     return {

@@ -40,8 +40,8 @@ async def list_all_cards(_: UserSchema = Depends(jwt_required)):
 
 
 @router.get("/get")
-async def get_card(card_id: CardIdSchema, UserSchema=Depends(jwt_required)):
-    card = await Card.get_or_none(id=card_id.id).prefetch_related("deck")
+async def get_card(card_id: int, UserSchema=Depends(jwt_required)):
+    card = await Card.get_or_none(id=card_id).prefetch_related("deck")
     if card is None:
         raise HTTPException(status_code=404, detail="Card not found")
     return {
