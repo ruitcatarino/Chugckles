@@ -17,8 +17,8 @@ const Game = () => {
             navigate('/games-list');
             return;
         }
-        setCurrentPlayer(playInfo.challange);
-        setCurrentChallenge(playInfo.player);
+        setCurrentPlayer(playInfo.player);
+        setCurrentChallenge(playInfo.challange);
     };
 
     useEffect(() => {
