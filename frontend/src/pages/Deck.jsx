@@ -30,9 +30,8 @@ const Deck = () => {
   };
 
   return (
-    <div>
-      <Navbar />
       <div className="decks-container">
+      <Navbar />
         <h1>Decks</h1>
         {decks.map((deck) => (
           <div key={deck.id} className="deck">
@@ -59,7 +58,6 @@ const Deck = () => {
           </div>
         ))}
       </div>
-    </div>
   );
 };
 
