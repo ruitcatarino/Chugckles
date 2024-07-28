@@ -1,4 +1,3 @@
-/* AddDeck.css */
 .add-deck-container {
   max-width: 600px;
   margin: 0 auto;
@@ -8,13 +7,12 @@
 .add-deck-container h1 {
   text-align: center;
   margin-bottom: 30px;
-  color:
 }
 
 .add-deck-container form {
   border-radius: 8px;
   padding: 30px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .add-deck-container label {
@@ -48,7 +46,7 @@
   .add-deck-container {
     padding: 20px 10px;
   }
-  
+
   .add-deck-container form {
     padding: 20px;
   }

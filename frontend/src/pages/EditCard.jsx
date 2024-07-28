@@ -7,7 +7,7 @@ import "../styles/EditCard.css";
 const EditCard = () => {
   const [challenge, setChallenge] = useState("");
   const [deck, setDeck] = useState("");
-  const cardId = window.location.pathname.split('/')[2];
+  const cardId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
 
   useEffect(() => {

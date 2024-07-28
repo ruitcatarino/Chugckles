@@ -12,7 +12,7 @@ const AddDeck = () => {
     e.preventDefault();
     try {
       await createDeck(deckName);
-      navigate('/decks');
+      navigate("/decks");
     } catch (error) {
       console.error("Failed to add deck:", error);
     }

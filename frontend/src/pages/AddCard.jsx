@@ -6,7 +6,7 @@ import "../styles/AddCard.css";
 
 const AddCard = () => {
   const [challenge, setChallenge] = useState("");
-  const deckName = window.location.pathname.split('/')[2];
+  const deckName = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

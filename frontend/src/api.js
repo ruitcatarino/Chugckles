@@ -54,7 +54,7 @@ export const getDecks = () => api.get("/deck/list");
 export const getGames = () => api.get("/game/list");
 
 export const getGame = async (gameName) => {
-  try{
+  try {
     const response = await api.get("/game/get?game_name=" + gameName);
     return response.data.payload;
   } catch (error) {
@@ -63,7 +63,7 @@ export const getGame = async (gameName) => {
 };
 
 export const playGame = async (gameName) => {
-  try{
+  try {
     const response = await api.post("/game/play", { name: gameName });
     return response.data.payload;
   } catch (error) {
@@ -72,8 +72,13 @@ export const playGame = async (gameName) => {
 };
 
 export const createGame = async (gameName, decks, players, rounds) => {
-  try{
-    const response = await api.post("/game/start", { "name": gameName, "deck_names": decks, "players": players, "total_rounds": rounds });
+  try {
+    const response = await api.post("/game/start", {
+      name: gameName,
+      deck_names: decks,
+      players: players,
+      total_rounds: rounds,
+    });
     return response.data.message;
   } catch (error) {
     throw error.response.data.detail;
@@ -81,7 +86,7 @@ export const createGame = async (gameName, decks, players, rounds) => {
 };
 
 export const getCard = async (cardId) => {
-  try{
+  try {
     const response = await api.get("/card/get?card_id=" + cardId);
     return response.data.payload;
   } catch (error) {
@@ -89,10 +94,12 @@ export const getCard = async (cardId) => {
   }
 };
 
-
 export const updateCard = async (cardId, challenge) => {
-  try{
-    const response = await api.put("/card/edit", { "id": cardId, "challenge": challenge });
+  try {
+    const response = await api.put("/card/edit", {
+      id: cardId,
+      challenge: challenge,
+    });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -101,8 +108,11 @@ export const updateCard = async (cardId, challenge) => {
 };
 
 export const createCard = async (deckName, challenge) => {
-  try{
-    const response = await api.post("/card/create", { "deck_name": deckName, "challenge": challenge });
+  try {
+    const response = await api.post("/card/create", {
+      deck_name: deckName,
+      challenge: challenge,
+    });
     return response.data;
   } catch (error) {
     throw error.response.data.detail;
@@ -110,8 +120,8 @@ export const createCard = async (deckName, challenge) => {
 };
 
 export const createDeck = async (deckName) => {
-  try{
-    const response = await api.post("/deck/create", { "name": deckName});
+  try {
+    const response = await api.post("/deck/create", { name: deckName });
     return response.data;
   } catch (error) {
     throw error.response.data.detail;
