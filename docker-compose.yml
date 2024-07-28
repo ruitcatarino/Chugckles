@@ -39,6 +39,8 @@ services:
       - "3000:3000"
     depends_on:
       - drink_safely
+    environment:
+      VITE_API_URL: http://127.0.0.1:8000
     volumes:
       - ./frontend:/app
 

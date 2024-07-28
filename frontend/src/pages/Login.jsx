@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
 import "../styles/Form.css"
@@ -18,7 +18,7 @@ const Login = () => {
       try {
         const token = await login(username, password);
         localStorage.setItem('token', token);
-        navigate('/games');
+        navigate('/games-list');
       } catch (error) {
         alert('Login failed: ' + error);
       }

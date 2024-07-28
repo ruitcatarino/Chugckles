@@ -1,15 +1,18 @@
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ProtectedRoute from './components/ProtectedRoute';
-import {BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Deck from "./pages/Deck";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import GameList from "./pages/GameList";
+import Game from "./pages/Game";
 
 function Logout() {
   localStorage.clear();
-  return <Navigate to="/" />
+  return <Navigate to="/" />;
 }
 
 function NotFound() {
-  return <Navigate to="/" />
+  return <Navigate to="/" />;
 }
 
 function App() {
@@ -18,12 +21,42 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/games" element={<ProtectedRoute></ProtectedRoute>} />
-        <Route path="/logout" element={<ProtectedRoute><Logout /></ProtectedRoute>} />
+        <Route
+          path="/deck"
+          element={
+            <ProtectedRoute>
+              <Deck />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/games-list"
+          element={
+            <ProtectedRoute>
+              <GameList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/game/:gameName"
+          element={
+            <ProtectedRoute>
+              <Game />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/logout"
+          element={
+            <ProtectedRoute>
+              <Logout />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;

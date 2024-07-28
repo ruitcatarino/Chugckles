@@ -1,0 +1,100 @@
+.decks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 40px);
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.deck {
+  border: 1px solid #444;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #2b2525;
+}
+
+.deck h2 {
+  margin-top: 0;
+  color: #fff;
+}
+
+.cards-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #646cff #2b2525;
+}
+
+.cards-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.cards-container::-webkit-scrollbar-thumb {
+  background-color: #646cff;
+  border-radius: 4px;
+}
+
+.cards-container::-webkit-scrollbar-track {
+  background-color: #2b2525;
+}
+
+.card {
+  min-width: 250px;
+  width: 250px;
+  border: 1px solid #444;
+  padding: 15px;
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 180px;
+  background-color: #333;
+  transition: background-color 0.3s;
+}
+
+.card:hover {
+  background-color: #3a3a3a;
+}
+
+.card p {
+  margin: 0;
+  padding-bottom: 40px;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.edit-button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 0.4em 0.8em;
+  font-size: 0.9em;
+}
+
+.add-card-button {
+  min-width: 250px;
+  width: 250px;
+  height: 180px;
+  border: 2px dashed #444;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #333;
+  color: #646cff;
+  transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.add-card-button:hover {
+  border-color: #646cff;
+  color: #535bf2;
+  background-color: #3a3a3a;
+}
