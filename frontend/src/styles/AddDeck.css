@@ -1,0 +1,55 @@
+/* AddDeck.css */
+.add-deck-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.add-deck-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color:
+}
+
+.add-deck-container form {
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.add-deck-container label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.add-deck-container input[type="text"] {
+  width: 96%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.add-deck-container button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+@media (max-width: 768px) {
+  .add-deck-container {
+    padding: 20px 10px;
+  }
+  
+  .add-deck-container form {
+    padding: 20px;
+  }
+}

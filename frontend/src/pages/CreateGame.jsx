@@ -7,7 +7,7 @@ import '../styles/CreateGame.css';
 const CreateGame = () => {
     const [gameName, setGameName] = useState('');
     const [selectedDecks, setSelectedDecks] = useState([]);
-    const [rounds, setRounds] = useState(3);
+    const [rounds, setRounds] = useState(10);
     const [availableDecks, setAvailableDecks] = useState([]);
     const [players, setPlayers] = useState(['']);
     const navigate = useNavigate();

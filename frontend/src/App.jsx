@@ -5,6 +5,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import GameList from "./pages/GameList";
 import Game from "./pages/Game";
 import CreateGame from "./pages/CreateGame";
+import EditCard from "./pages/EditCard";
+import AddCard from "./pages/AddCard";
+import AddDeck from "./pages/AddDeck";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 function Logout() {
@@ -23,7 +26,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/deck"
+          path="/decks"
           element={
             <ProtectedRoute>
               <Deck />
@@ -51,6 +54,30 @@ function App() {
           element={
             <ProtectedRoute>
               <CreateGame />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-card/:cardId"
+          element={
+            <ProtectedRoute>
+              <EditCard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-card/:deckName"
+          element={
+            <ProtectedRoute>
+              <AddCard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/add-deck"
+          element={
+            <ProtectedRoute>
+              <AddDeck />
             </ProtectedRoute>
           }
         />

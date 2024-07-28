@@ -29,35 +29,42 @@ const Deck = () => {
     navigate(`/edit-card/${cardId}`);
   };
 
+  const handleAddDeck = () => {
+    navigate("/add-deck");
+  };
+
   return (
-      <div className="decks-container">
+    <div className="decks-container">
       <Navbar />
-        <h1>Decks</h1>
-        {decks.map((deck) => (
-          <div key={deck.id} className="deck">
-            <h2>{deck.name}</h2>
-            <div className="cards-container">
-              {deck.cards.map((card) => (
-                <div key={card.id} className="card">
-                  <p>{card.challenge}</p>
-                  <button
-                    className="edit-button"
-                    onClick={() => handleEditCard(card.id)}
-                  >
-                    Edit
-                  </button>
-                </div>
-              ))}
-              <button
-                className="add-card-button"
-                onClick={() => handleAddCard(deck.name)}
-              >
-                Add Card
-              </button>
-            </div>
+      <h1>Decks</h1>
+      {decks.map((deck) => (
+        <div key={deck.id} className="deck">
+          <h2>{deck.name}</h2>
+          <div className="cards-container">
+            {deck.cards.map((card) => (
+              <div key={card.id} className="card">
+                <p>{card.challenge}</p>
+                <button
+                  className="edit-button"
+                  onClick={() => handleEditCard(card.id)}
+                >
+                  Edit
+                </button>
+              </div>
+            ))}
+            <button
+              className="add-card-button"
+              onClick={() => handleAddCard(deck.name)}
+            >
+              Add Card
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+      <button className="add-deck-button" onClick={handleAddDeck}>
+        Add New Deck
+      </button>
+    </div>
   );
 };
 

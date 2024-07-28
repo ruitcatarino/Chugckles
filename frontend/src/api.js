@@ -79,3 +79,41 @@ export const createGame = async (gameName, decks, players, rounds) => {
     throw error.response.data.detail;
   }
 };
+
+export const getCard = async (cardId) => {
+  try{
+    const response = await api.get("/card/get?card_id=" + cardId);
+    return response.data.payload;
+  } catch (error) {
+    throw error.response.data.detail;
+  }
+};
+
+
+export const updateCard = async (cardId, challenge) => {
+  try{
+    const response = await api.put("/card/edit", { "id": cardId, "challenge": challenge });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error.response.data.detail;
+  }
+};
+
+export const createCard = async (deckName, challenge) => {
+  try{
+    const response = await api.post("/card/create", { "deck_name": deckName, "challenge": challenge });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.detail;
+  }
+};
+
+export const createDeck = async (deckName) => {
+  try{
+    const response = await api.post("/deck/create", { "name": deckName});
+    return response.data;
+  } catch (error) {
+    throw error.response.data.detail;
+  }
+};
