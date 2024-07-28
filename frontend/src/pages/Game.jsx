@@ -38,14 +38,13 @@ const Game = () => {
 
     return (
         <div className="game-page">
-            <button className="back-button" onClick={() => navigate('/games-list')}>Back to Games List</button>
+            <button className="back-button" onClick={() => navigate('/games-list')}>Go Back</button>
             <div className="game-container">
-                <h1 className="game-title">{game?.name}</h1>
+                <h1 className="game-title">{currentPlayer}</h1>
                 <div className="game-info">
-                    <p><span>Current Player:</span> {currentPlayer}</p>
-                    <p><span>Current Challenge:</span> {currentChallenge}</p>
+                    <p><span>{currentChallenge}</span> </p>
                 </div>
-                <button className="play-button" onClick={handlePlayGame}>Play Game</button>
+                <button className="play-button" onClick={handlePlayGame}>Next</button>
             </div>
         </div>
     );

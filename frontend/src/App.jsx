@@ -2,9 +2,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Deck from "./pages/Deck";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import GameList from "./pages/GameList";
 import Game from "./pages/Game";
+import CreateGame from "./pages/CreateGame";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 function Logout() {
   localStorage.clear();
@@ -42,6 +43,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Game />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-game"
+          element={
+            <ProtectedRoute>
+              <CreateGame />
             </ProtectedRoute>
           }
         />

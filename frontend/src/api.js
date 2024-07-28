@@ -71,3 +71,11 @@ export const playGame = async (gameName) => {
   }
 };
 
+export const createGame = async (gameName, decks, players, rounds) => {
+  try{
+    const response = await api.post("/game/start", { "name": gameName, "deck_names": decks, "players": players, "total_rounds": rounds });
+    return response.data.message;
+  } catch (error) {
+    throw error.response.data.detail;
+  }
+};
