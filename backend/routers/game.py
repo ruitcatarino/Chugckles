@@ -40,20 +40,16 @@ async def play_game(
     game_info: GameNameSchema, user_info: UserSchema = Depends(jwt_required)
 ):
     user = await User.get(username=user_info.username)
-    if (
-        game := await Game.get_or_none(
-            name=game_info.name, creator=user, finished=False
-        ).prefetch_related("state")
-    ) is None:
+    game = await Game.get_or_none(name=game_info.name, creator=user).prefetch_related(
+        "state"
+    )
+    if game is None:
         raise HTTPException(
             status_code=404, detail=f"Game with {game_info.name} does not exists"
         )
     if game.finished:
-        raise HTTPException(
-            status_code=404, detail=f"Game with {game_info.name} already ended"
-        )
+        {"message": "Game finished"}
     try:
-
         challange, player, is_hidden = await game.get_next_turn()
         return {
             "message": "Sucessfully played",

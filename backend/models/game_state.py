@@ -31,7 +31,7 @@ class GameState(Model):
         ), "There must be at least as many cards as players"
         assert total_rounds > 0, "At least one round is required"
         total_rounds = min(
-            total_rounds, _count_cards_for_all_players(cards) // len(players)
+            total_rounds, _count_cards_for_specific_players(cards) // len(players)
         )
         cards = await _generate_cards(cards, total_rounds)
         return await super().create(
@@ -52,10 +52,7 @@ class GameState(Model):
 
     @property
     def is_finished(self) -> bool:
-        return (
-            self.current_index >= len(self.cards)
-            or self.current_round >= self.total_rounds
-        )
+        return self.current_index >= len(self.cards) - 1
 
     @property
     def current_card(self) -> str:
@@ -78,7 +75,7 @@ class GameState(Model):
         if self.current_is_for_all_players:
             return "All"
         return self.players[self.current_turn % self.n_players]
-    
+
     @property
     def challanges(self) -> List[str]:
         return [card["challenge"] for card in self.cards]
@@ -109,3 +106,6 @@ async def _generate_cards(cards: list[Card], total_rounds: int) -> List[Card]:
 
 def _count_cards_for_all_players(cards: list[Card]) -> int:
     return sum(1 for card in cards if card.is_for_all_players)
+
+def _count_cards_for_specific_players(cards: list[Card]) -> int:
+    return sum(1 for card in cards if not card.is_for_all_players)

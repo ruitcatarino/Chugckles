@@ -65,7 +65,10 @@ class Game(Model):
 
         try:
             state = await self.state
-            return await state.next_turn()
+            data = await state.next_turn()
+            if state.is_finished:
+                await self.finish()
+            return data
         except GameFinished:
-            self.is_finished = True
+            await self.finish()
             raise GameFinished
