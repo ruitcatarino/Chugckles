@@ -1,14 +1,23 @@
-FROM python:3.12-bookworm
+FROM python:3.12-slim-bookworm
 
-ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 
 WORKDIR /src/app
 
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /src/app/requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-COPY . /src/app
+COPY . .
 
 COPY ./utils/ipython/ipython_config.py /root/.ipython/profile_default/
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+RUN chown -R appuser:appgroup /src/app
+
+USER appuser
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
