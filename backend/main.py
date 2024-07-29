@@ -35,9 +35,16 @@ favicon_path = "favicon.ico"
 async def favicon():
     return FileResponse(favicon_path)
 
+
 @app.get("/")
 async def main():
     return {"message": "Welcome to Chugckles"}
+
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 
 register_tortoise(
     app,
