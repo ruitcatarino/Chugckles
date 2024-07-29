@@ -7,6 +7,8 @@ const Game = () => {
   const [game, setGame] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [currentChallenge, setCurrentChallenge] = useState(null);
+  const [currentRound, setCurrentRound] = useState(null);
+  const [totalRounds, setTotalRounds] = useState(null);
   const navigate = useNavigate();
   const gameName = window.location.pathname.split("/")[2];
 
@@ -23,6 +25,8 @@ const Game = () => {
     }
     setCurrentPlayer(playInfo.player);
     setCurrentChallenge(playInfo.challange);
+    setCurrentRound(playInfo.current_round);
+    setTotalRounds(playInfo.total_rounds);
   };
 
   useEffect(() => {
@@ -33,6 +37,8 @@ const Game = () => {
         console.log("Fetched game:", fetchedGame);
         setCurrentPlayer(fetchedGame.current_player);
         setCurrentChallenge(fetchedGame.current_challange);
+        setCurrentRound(fetchedGame.current_round);
+        setTotalRounds(fetchedGame.total_rounds);
       } catch (error) {
         console.error("Failed to fetch game:", error);
       }
@@ -46,7 +52,8 @@ const Game = () => {
         Go Back
       </button>
       <div className="game-container">
-        <h1 className="game-title">{currentPlayer}</h1>
+        <h1 className="game-title">Game {gameName} ({currentRound}/{totalRounds})</h1>
+        <h2 className="game-player">{currentPlayer}</h2>
         <div className="game-info">
           <p>
             <span>{currentChallenge}</span>{" "}

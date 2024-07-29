@@ -43,7 +43,7 @@ async def play_game(
     if (
         game := await Game.get_or_none(
             name=game_info.name, creator=user, finished=False
-        )
+        ).prefetch_related("state")
     ) is None:
         raise HTTPException(
             status_code=404, detail=f"Game with {game_info.name} does not exists"
@@ -53,12 +53,15 @@ async def play_game(
             status_code=404, detail=f"Game with {game_info.name} already ended"
         )
     try:
+
         challange, player = await game.get_next_turn()
         return {
             "message": "Sucessfully played",
             "payload": {
                 "challange": challange,
                 "player": player,
+                "current_round": game.state.current_round,
+                "total_rounds": game.state.total_rounds,
             },
         }
     except GameFinished:
