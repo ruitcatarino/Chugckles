@@ -3,17 +3,21 @@ FROM node:18 AS build
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
 
 RUN npm run build
 
-FROM nginx:alpine
+FROM node:18-slim
 
-COPY --from=build /app/dist /usr/share/nginx/html
+WORKDIR /usr/src/app
 
-EXPOSE 80
+COPY --from=build /app/package*.json ./
+RUN npm install
 
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=build /app /usr/src/app
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]
