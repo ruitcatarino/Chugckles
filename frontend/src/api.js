@@ -23,6 +23,7 @@ export const login = async (username, password) => {
   formData.append("password", password);
   try {
     console.log("VITE_API_URL: " + import.meta.env.VITE_API_URL);
+    console.log('All Env Variables:', import.meta.env);
     const response = await axios.post(
       `${API_URL}/user/login`,
       formData.toString(),
