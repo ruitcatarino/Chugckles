@@ -16,3 +16,13 @@ class Card(Model):
 
     def __repr__(self) -> str:
         return str(self)
+    
+    @property
+    async def is_hidden(self) -> bool:
+        deck = await self.deck
+        return deck.is_hidden
+    
+    @property
+    async def is_for_all_players(self) -> bool:
+        deck = await self.deck
+        return deck.is_for_all_players

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from models import Deck
-from utils.schemas import DeckSchema, DeckEditSchema, UserSchema, DeckNameSchema
+from utils.schemas import DeckSchema, DeckEditSchema, UserSchema, DeckCreateSchema
 from utils.authentication import jwt_required
 
 router = APIRouter(
@@ -10,12 +10,12 @@ router = APIRouter(
 
 
 @router.post("/create")
-async def create_deck(deck_body: DeckSchema, _: UserSchema = Depends(jwt_required)):
+async def create_deck(deck_body: DeckCreateSchema, _: UserSchema = Depends(jwt_required)):
     if await Deck.exists(name=deck_body.name):
         raise HTTPException(
             status_code=404, detail=f"Deck with {deck_body.name} already exists"
         )
-    deck = await Deck.create(name=deck_body.name)
+    deck = await Deck.create(name=deck_body.name, settings=deck_body.settings)
     return {"message": f"{deck} created"}
 
 
@@ -26,6 +26,7 @@ async def list_all_decks(_: UserSchema = Depends(jwt_required)):
         {
             "id": deck.id,
             "name": deck.name,
+            "settings": deck.settings,
             "cards": [
                 {"id": card.id, "challenge": card.challenge} for card in deck.cards
             ],

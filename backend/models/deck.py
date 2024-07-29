@@ -7,6 +7,7 @@ class Deck(Model):
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=20, unique=True)
     cards = fields.ReverseRelation["Card"]
+    settings = fields.JSONField()
 
     class Meta:
         table = "decks"
@@ -16,3 +17,11 @@ class Deck(Model):
 
     def __repr__(self) -> str:
         return str(self)
+    
+    @property
+    def is_hidden(self) -> bool:
+        return self.settings.get("hidden", False)
+    
+    @property
+    def is_for_all_players(self) -> bool:
+        return self.settings.get("for_all_players", False)

@@ -54,12 +54,13 @@ async def play_game(
         )
     try:
 
-        challange, player = await game.get_next_turn()
+        challange, player, is_hidden = await game.get_next_turn()
         return {
             "message": "Sucessfully played",
             "payload": {
                 "challange": challange,
                 "player": player,
+                "is_hidden": is_hidden,
                 "current_round": game.state.current_round,
                 "total_rounds": game.state.total_rounds,
             },
@@ -131,6 +132,7 @@ async def get_game(game_name: str, user: UserSchema = Depends(jwt_required)):
             "current_turn": game.state.current_turn,
             "current_player": game.state.current_player,
             "current_challange": game.state.current_challenge,
+            "current_is_hidden": game.state.current_is_hidden,
         },
         "message": "Game found",
     }

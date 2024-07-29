@@ -28,7 +28,7 @@ async def close_db() -> None:
 
 async def prepopulate_db() -> None:
     if await Deck.all().count() == 0 and await Card.all().count() == 0:
-        for deck_name, cards in POPULATE_DATA.items():
-            new_deck = await Deck.create(name=deck_name)
-            for card_data in cards:
+        for deck_name, deck_info in POPULATE_DATA.items():
+            new_deck = await Deck.create(name=deck_name, settings=deck_info.get("settings", {}))
+            for card_data in deck_info.get("cards", []):
                 await Card.create(challenge=card_data, deck=new_deck)
