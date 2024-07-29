@@ -6,6 +6,8 @@ This is a fullstack app designed to make a night of drinking more fun and full o
 ### Backend
 The backend provides endpoints for user authentication, card and deck management, and game management.
 
+You can populate the database with sample cards and decks using the `POPULATE_DATA` variable in the `backend/utils/__init__.py` file.
+
 The API endpoints are as follows:
 #### Authentication
 
@@ -52,6 +54,7 @@ cd sipsync
 docker compose up -d
 ```
 The backend API will be available at http://127.0.0.1:8000 and the frontend application at http://localhost:3000.
+
 
 ## Contributing
 Pull requests and helping hands in improvements are more than welcome! As a backend developer, I acknowledge that the frontend may not be perfect and would greatly appreciate any assistance in making it better.
