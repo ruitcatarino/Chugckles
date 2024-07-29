@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://0.0.0.0:8000";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -24,7 +24,7 @@ export const login = async (username, password) => {
   try {
     console.log("API_URL: " + API_URL);
     const response = await axios.post(
-      "/user/login",
+      `${API_URL}/user/login`,
       formData.toString(),
       {
         headers: {
