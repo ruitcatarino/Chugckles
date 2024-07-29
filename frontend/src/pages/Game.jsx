@@ -52,7 +52,8 @@ const Game = () => {
         Go Back
       </button>
       <div className="game-container">
-        <h1 className="game-title">Game {gameName} ({currentRound}/{totalRounds})</h1>
+        <h1 className="game-title">Game: {gameName}</h1>
+        <h1 className="game-title">Rounds: {currentRound}/{totalRounds}</h1>
         <h2 className="game-player">{currentPlayer}</h2>
         <div className="game-info">
           <p>
