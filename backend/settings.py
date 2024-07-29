@@ -15,6 +15,7 @@ class Settings:
         )
         self.jwt_validity = int(os.getenv("JWT_VALIDITY", 7200))
         self.jwt_algorithm = os.getenv("JWT_ALGORITHM", "HS256")
+        self.allow_registrations = True if os.getenv("ALLOW_REGISTRATION", "True").lower() == "true" else False
 
     def __getattr__(self, name) -> Any:
         raise AttributeError(

@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from models.user import User
 from utils.authentication import generate_token
 from utils.schemas import UserSchema
+from settings import settings
 
 router = APIRouter(
     prefix="/user",
@@ -12,6 +13,12 @@ router = APIRouter(
 
 @router.post("/register")
 async def register(user_model: UserSchema):
+    if settings.allow_registrations is False:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Registrations are not allowed at this time.",
+        )
+    
     if await User.exists(username=user_model.username):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

@@ -15,6 +15,7 @@ services:
       DB_USER: "user"
       DB_PASSWORD: "password"
       DB_NAME: "mydatabase"
+      ALLOW_REGISTRATION: True
     networks:
       - chugckles
 
