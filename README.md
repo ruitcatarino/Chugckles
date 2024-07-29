@@ -46,8 +46,8 @@ The frontend interacts with these endpoints to create a seamless user experience
 To run the project, use Docker Compose:
 1. Clone the repository:
 ```sh
-git clone https://github.com/ruitcatarino/sipsync.git
-cd sipsync
+git clone https://github.com/ruitcatarino/chugckles.git
+cd chugckles
 ```
 2. Start the application:
 ```sh
