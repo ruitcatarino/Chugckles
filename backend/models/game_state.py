@@ -57,13 +57,11 @@ class GameState(Model):
     async def next_turn(self) -> tuple[str, str]:
         if self.is_finished: 
             raise GameFinished
-        challange = self.current_challenge
-        player = self.current_player
         self.current_turn += 1
         if self.current_turn % self.n_players == 0:
             random.shuffle(self.players)
         await self.save()
-        return challange, player
+        return self.current_challenge, self.current_player
 
 def _draw_cards(cards: list[Card], total_rounds: int, n_players: int) -> List[Card]:
     card_list = list(cards)
