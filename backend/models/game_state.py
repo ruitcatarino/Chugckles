@@ -1,6 +1,5 @@
 import random
 from typing import List
-
 from models import Card
 from tortoise import fields
 from tortoise.models import Model
@@ -30,10 +29,13 @@ class GameState(Model):
             players
         ), "There must be at least as many cards as players"
         assert total_rounds > 0, "At least one round is required"
-        total_rounds = min(
-            total_rounds, _count_cards_for_specific_players(cards) // len(players)
+        if not await all_cards_are_for_all_players(cards):
+            total_turns = total_rounds * len(players)
+        else:
+            total_turns = total_rounds
+        cards = await generate_cards(
+            cards, total_turns, await all_cards_are_for_all_players(cards)
         )
-        cards = await _generate_cards(cards, total_rounds)
         return await super().create(
             cards=cards,
             current_index=current_index,
@@ -55,7 +57,7 @@ class GameState(Model):
         return self.current_index >= len(self.cards) - 1
 
     @property
-    def current_card(self) -> str:
+    def current_card(self) -> dict:
         return self.cards[self.current_index]
 
     @property
@@ -77,35 +79,61 @@ class GameState(Model):
         return self.players[self.current_turn % self.n_players]
 
     @property
-    def challanges(self) -> List[str]:
+    def challenges(self) -> List[str]:
         return [card["challenge"] for card in self.cards]
 
-    async def next_turn(self) -> tuple[str, str]:
+    async def next_turn(self) -> tuple[str, str, bool]:
         if self.is_finished:
             raise GameFinished
         self.current_index += 1
         if not self.current_is_for_all_players:
             self.current_turn += 1
-        if self.current_turn % self.n_players == 0:
+        data = self.current_challenge, self.current_player, self.current_is_hidden
+        if self.current_turn % self.n_players == self.n_players -1:
             random.shuffle(self.players)
         await self.save()
-        return self.current_challenge, self.current_player, self.current_is_hidden
+        return data
 
 
-async def _generate_cards(cards: list[Card], total_rounds: int) -> List[Card]:
+async def generate_cards(
+    cards: List[Card], total_turns: int, count_all_players_cards: bool = False
+) -> List[dict]:
     random.shuffle(cards)
-    return [
-        {
-            "challenge": card.challenge,
-            "is_for_all_players": await card.is_for_all_players,
-            "is_hidden": await card.is_hidden,
-        }
-        for card in cards
-    ]
+    data = []
+    cards_in_data = 0
+    for card in cards:
+        data.append(
+            {
+                "challenge": card.challenge,
+                "is_for_all_players": await card.is_for_all_players,
+                "is_hidden": await card.is_hidden,
+            }
+        )
+        if not await card.is_for_all_players or count_all_players_cards:
+            cards_in_data += 1
+        if cards_in_data == total_turns:
+            return data
+    raise AssertionError("Not enough cards")
 
 
-def _count_cards_for_all_players(cards: list[Card]) -> int:
-    return sum(1 for card in cards if card.is_for_all_players)
+async def count_cards_for_specific_players(cards: List[Card]) -> int:
+    count = 0
+    for card in cards:
+        if not await card.is_for_all_players:
+            count += 1
+    return count
 
-def _count_cards_for_specific_players(cards: list[Card]) -> int:
-    return sum(1 for card in cards if not card.is_for_all_players)
+
+async def count_cards_for_all_players(cards: List[Card]) -> int:
+    count = 0
+    for card in cards:
+        if await card.is_for_all_players:
+            count += 1
+    return count
+
+
+async def all_cards_are_for_all_players(cards: List[Card]) -> bool:
+    for card in cards:
+        if not await card.is_for_all_players:
+            return False
+    return True
