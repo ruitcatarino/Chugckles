@@ -12,7 +12,6 @@ c.InteractiveShellApp.exec_files = [
 
 c.InteractiveShell.autoindent = True
 c.InteractiveShell.confirm_exit = False
-c.InteractiveShell.deep_reload = True
 c.InteractiveShell.editor = 'nano'
 
 c.PrefilterManager.multi_line_specials = True
