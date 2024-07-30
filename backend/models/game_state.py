@@ -29,13 +29,12 @@ class GameState(Model):
             players
         ), "There must be at least as many cards as players"
         assert total_rounds > 0, "At least one round is required"
-        if not await all_cards_are_for_all_players(cards):
+        are_all_cards_for_all_players = await all_cards_are_for_all_players(cards)
+        if not are_all_cards_for_all_players:
             total_turns = total_rounds * len(players)
         else:
             total_turns = total_rounds
-        cards = await generate_cards(
-            cards, total_turns, await all_cards_are_for_all_players(cards)
-        )
+        cards = await generate_cards(cards, total_turns, are_all_cards_for_all_players)
         return await super().create(
             cards=cards,
             current_index=current_index,
@@ -50,7 +49,7 @@ class GameState(Model):
 
     @property
     def current_round(self) -> int:
-        return self.current_turn // self.n_players
+        return (self.current_turn // self.n_players) + 1
 
     @property
     def is_finished(self) -> bool:
@@ -82,17 +81,22 @@ class GameState(Model):
     def challenges(self) -> List[str]:
         return [card["challenge"] for card in self.cards]
 
+    @property
+    def all_cards_are_for_all_players(self) -> bool:
+        return all(card["is_for_all_players"] for card in self.cards)
+
     async def next_turn(self) -> tuple[str, str, bool]:
         if self.is_finished:
             raise GameFinished
         self.current_index += 1
         if not self.current_is_for_all_players:
             self.current_turn += 1
-        data = self.current_challenge, self.current_player, self.current_is_hidden
-        if self.current_turn % self.n_players == self.n_players -1:
-            random.shuffle(self.players)
+            if self.current_turn % self.n_players == 0:
+                random.shuffle(self.players)
+        if self.all_cards_are_for_all_players:
+            self.current_turn += self.n_players
         await self.save()
-        return data
+        return self.current_challenge, self.current_player, self.current_is_hidden
 
 
 async def generate_cards(
