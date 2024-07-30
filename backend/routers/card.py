@@ -13,7 +13,7 @@ router = APIRouter(
 async def create_card(
     card_body: CardCreationSchema, _: UserSchema = Depends(jwt_required)
 ):
-    deck = await Deck.get_or_none(name=card_body.deck_name)
+    deck = await Deck.get_or_none(id=card_body.deck_id)
     if deck is None:
         raise HTTPException(status_code=404, detail="Deck not found")
     if await Card.exists(challenge=card_body.challenge, deck=deck):

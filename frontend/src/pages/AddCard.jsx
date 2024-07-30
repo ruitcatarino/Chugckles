@@ -1,18 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { createCard } from "../api";
+import { createCard, getDeck } from "../api";
 import Navbar from "../components/Navbar";
 import "../styles/AddCard.css";
 
 const AddCard = () => {
   const [challenge, setChallenge] = useState("");
-  const deckName = window.location.pathname.split("/")[2];
+  const [deck, setDeck] = useState("");
+  const deckId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchDeck = async () => {
+      try {
+        const response = await getDeck(deckId);
+        setDeck(response);
+      } catch (error) {
+        console.error("Failed to fetch deck:", error);
+      }
+    };
+    fetchDeck();
+  }, [deckId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createCard(deckName, challenge);
+      await createCard(deckId, challenge);
       navigate(`/decks`);
     } catch (error) {
       alert("Failed to add card:", error);
@@ -22,7 +35,7 @@ const AddCard = () => {
   return (
     <div className="add-card-container">
       <Navbar />
-      <h1>Add Card to {deckName}</h1>
+      <h1>Add Card to {deck.name}</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="challenge">Challenge:</label>
         <textarea

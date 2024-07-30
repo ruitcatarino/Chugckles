@@ -37,8 +37,8 @@ async def list_all_decks(_: UserSchema = Depends(jwt_required)):
 
 
 @router.get("/get")
-async def get_deck(deck_name: str, _: UserSchema = Depends(jwt_required)):
-    deck = await Deck.get_or_none(name=deck_name).prefetch_related("cards")
+async def get_deck(deck_id: int, _: UserSchema = Depends(jwt_required)):
+    deck = await Deck.get_or_none(id=deck_id).prefetch_related("cards")
     if deck is None:
         raise HTTPException(status_code=404, detail="Deck not found")
     return {
@@ -56,7 +56,7 @@ async def get_deck(deck_name: str, _: UserSchema = Depends(jwt_required)):
 
 @router.put("/edit")
 async def edit_card(deck_body: DeckEditSchema, _: UserSchema = Depends(jwt_required)):
-    deck = await Deck.get_or_none(name=deck_body.name)
+    deck = await Deck.get_or_none(id=deck_body.id)
     if deck is None:
         raise HTTPException(status_code=404, detail="Deck not found")
     if deck_body.new_name:

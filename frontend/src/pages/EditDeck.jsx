@@ -8,14 +8,14 @@ const EditDeck = () => {
   const [deck, setDeck] = useState("");
   const [settings, setSettings] = useState({});
   const [newName, setNewName] = useState("");
-  const deckName = window.location.pathname.split("/")[2];
+  const deckId = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDeck = async () => {
+      console.log(deckId);
       try {
-        const response = await getDeck(deckName);
-        console.log(response);
+        const response = await getDeck(deckId);
         setDeck(response);
         setNewName(response.name);
         setSettings(response.settings);
@@ -24,7 +24,7 @@ const EditDeck = () => {
       }
     };
     fetchDeck();
-  }, [deckName]);
+  }, [deckId]);
 
   const handleSettingChange = (settingKey) => {
     setSettings((prevSettings) => ({
@@ -42,7 +42,7 @@ const EditDeck = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateDeck(deckName, newName, settings);
+      await updateDeck(deckId, newName, settings);
       navigate(`/decks`);
     } catch (error) {
       alert("Failed to update deck:", error);
@@ -54,7 +54,7 @@ const EditDeck = () => {
       <Navbar />
       <h1>Edit Deck {deck.name}</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="deckName">Deck Name:</label>
+        <label htmlFor="deckId">Deck Name:</label>
         <input
           type="text"
           id="deckName"

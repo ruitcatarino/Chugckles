@@ -107,14 +107,15 @@ export const updateCard = async (cardId, challenge) => {
   }
 };
 
-export const createCard = async (deckName, challenge) => {
+export const createCard = async (deckId, challenge) => {
   try {
     const response = await api.post("/card/create", {
-      deck_name: deckName,
+      deck_id: deckId,
       challenge: challenge,
     });
     return response.data;
   } catch (error) {
+    console.log(error);
     throw error.response.data.detail;
   }
 };
@@ -128,11 +129,12 @@ export const createDeck = async (deckName) => {
   }
 };
 
-export const getDeck = async (deckName) => {
+export const getDeck = async (deckId) => {
   try {
-    const response = await api.get("/deck/get?deck_name=" + deckName);
+    const response = await api.get("/deck/get?deck_id=" + deckId);
     return response.data.payload;
   } catch (error) {
+    console.log(error);
     throw error.response.data.detail;
   }
 };

@@ -15,7 +15,7 @@ GameSchema = pydantic_model_creator(
 
 class CardCreationSchema(BaseModel):
     challenge: str
-    deck_name: str
+    deck_id: int
 
 
 class CardEditSchema(BaseModel):
@@ -33,7 +33,7 @@ class DeckCreateSchema(BaseModel):
 
 
 class DeckEditSchema(BaseModel):
-    name: str
+    id: int
     new_name: Optional[str] = ""
     settings: Optional[dict] = {}
 

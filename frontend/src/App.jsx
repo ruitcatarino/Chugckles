@@ -67,7 +67,7 @@ function App() {
           }
         />
         <Route
-          path="/add-card/:deckName"
+          path="/add-card/:deckID"
           element={
             <ProtectedRoute>
               <AddCard />
@@ -75,7 +75,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-deck/:deckName"
+          path="/edit-deck/:deckID"
           element={
             <ProtectedRoute>
               <EditDeck />

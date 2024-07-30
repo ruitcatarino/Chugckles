@@ -29,8 +29,8 @@ const Deck = () => {
     navigate(`/edit-card/${cardId}`);
   };
 
-  const handleEditDeck = (deckName) => {
-    navigate(`/edit-deck/${deckName}`);
+  const handleEditDeck = (deckId) => {
+    navigate(`/edit-deck/${deckId}`);
   };
 
   const handleAddDeck = () => {
@@ -63,7 +63,7 @@ const Deck = () => {
             <h2>{deck.name}</h2>
             <button
               className="edit-deck-button"
-              onClick={() => handleEditDeck(deck.name)}
+              onClick={() => handleEditDeck(deck.id)}
             >
               Edit Deck
             </button>
@@ -83,7 +83,7 @@ const Deck = () => {
             ))}
             <button
               className="add-card-button"
-              onClick={() => handleAddCard(deck.name)}
+              onClick={() => handleAddCard(deck.id)}
             >
               Add Card
             </button>
