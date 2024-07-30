@@ -39,7 +39,7 @@ const GameList = () => {
             <h2>{game.name}</h2>
             <p>Status: {game.is_finished ? "Finished" : "In Progress"}</p>
             <p>Decks: {game.decks.map((deck) => deck.name).join(", ")}</p>
-            <p>Challenges: {game.challanges.length}</p>
+            <p>Challenges: {game.challenges.length}</p>
             <p>
               Current Round: {game.current_round} / {game.total_rounds}
             </p>

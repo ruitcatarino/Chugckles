@@ -79,7 +79,7 @@ async def list_user_games(user: UserSchema = Depends(jwt_required)):
             "name": game.name,
             "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
             "is_finished": game.finished,
-            "challanges": state.challanges,
+            "challenges": state.challenges,
             "current_round": state.current_round,
             "total_rounds": state.total_rounds,
         }
@@ -99,7 +99,7 @@ async def list_all_user_games(user: UserSchema = Depends(jwt_required)):
             "name": game.name,
             "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
             "is_finished": game.finished,
-            "challanges": state.challanges,
+            "challenges": state.challenges,
             "current_round": state.current_round,
             "total_rounds": state.total_rounds,
         }
@@ -122,7 +122,7 @@ async def get_game(game_name: str, user: UserSchema = Depends(jwt_required)):
             "name": game.name,
             "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
             "is_finished": game.finished,
-            "challanges": game.state.challanges,
+            "challenges": game.state.challenges,
             "current_round": game.state.current_round,
             "total_rounds": game.state.total_rounds,
             "current_turn": game.state.current_turn,
