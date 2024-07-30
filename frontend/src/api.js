@@ -139,10 +139,10 @@ export const getDeck = async (deckId) => {
   }
 };
 
-export const updateDeck = async (deckName, deckNewName, settings) => {
+export const updateDeck = async (deckId, deckNewName, settings) => {
   try {
     const response = await api.put("/deck/edit", {
-      "name": deckName,
+      "id": deckId,
       "new_name": deckNewName,
       "settings": settings,
     });
