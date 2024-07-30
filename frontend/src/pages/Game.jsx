@@ -16,7 +16,7 @@ const Game = () => {
     const playInfo = await playGame(gameName);
     if (
       !playInfo ||
-      !playInfo.hasOwnProperty("challange") ||
+      !playInfo.hasOwnProperty("challenge") ||
       !playInfo.hasOwnProperty("player")
     ) {
       alert("Game finished");
@@ -24,7 +24,7 @@ const Game = () => {
       return;
     }
     setCurrentPlayer(playInfo.player);
-    setCurrentChallenge(playInfo.challange);
+    setCurrentChallenge(playInfo.challenge);
     setCurrentRound(playInfo.current_round);
     setTotalRounds(playInfo.total_rounds);
   };
@@ -36,7 +36,7 @@ const Game = () => {
         setGame(fetchedGame);
         console.log("Fetched game:", fetchedGame);
         setCurrentPlayer(fetchedGame.current_player);
-        setCurrentChallenge(fetchedGame.current_challange);
+        setCurrentChallenge(fetchedGame.current_challenge);
         setCurrentRound(fetchedGame.current_round);
         setTotalRounds(fetchedGame.total_rounds);
       } catch (error) {
