@@ -9,6 +9,7 @@ const Game = () => {
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [currentRound, setCurrentRound] = useState(null);
   const [totalRounds, setTotalRounds] = useState(null);
+  const [isHidden, setIsHidden] = useState(true);
   const navigate = useNavigate();
   const gameName = window.location.pathname.split("/")[2];
 
@@ -27,6 +28,7 @@ const Game = () => {
     setCurrentChallenge(playInfo.challenge);
     setCurrentRound(playInfo.current_round);
     setTotalRounds(playInfo.total_rounds);
+    setIsHidden(playInfo.is_hidden);
   };
 
   useEffect(() => {
@@ -39,12 +41,17 @@ const Game = () => {
         setCurrentChallenge(fetchedGame.current_challenge);
         setCurrentRound(fetchedGame.current_round);
         setTotalRounds(fetchedGame.total_rounds);
+        setIsHidden(fetchedGame.current_is_hidden);
       } catch (error) {
         console.error("Failed to fetch game:", error);
       }
     };
     fetchGame();
   }, []);
+
+  const toggleChallengeVisibility = () => {
+    setIsHidden(false);
+  };
 
   return (
     <div className="game-page">
@@ -53,12 +60,25 @@ const Game = () => {
       </button>
       <div className="game-container">
         <h1 className="game-title">Game: {gameName}</h1>
-        <h1 className="game-title">Rounds: {currentRound}/{totalRounds}</h1>
+        {(currentRound !== 0 || totalRounds !== 0) && (
+          <h1 className="game-title">
+            Rounds: {currentRound}/{totalRounds}
+          </h1>
+        )}
         <h2 className="game-player">{currentPlayer}</h2>
         <div className="game-info">
-          <p>
-            <span>{currentChallenge}</span>{" "}
-          </p>
+          {isHidden ? (
+            <p
+              className="blurred-challenge"
+              onClick={toggleChallengeVisibility}
+            >
+              {currentChallenge}
+            </p>
+          ) : (
+            <p>
+              <span>{currentChallenge}</span>
+            </p>
+          )}
         </div>
         <button className="play-button" onClick={handlePlayGame}>
           Next

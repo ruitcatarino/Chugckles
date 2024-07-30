@@ -8,6 +8,7 @@ import CreateGame from "./pages/CreateGame";
 import EditCard from "./pages/EditCard";
 import AddCard from "./pages/AddCard";
 import AddDeck from "./pages/AddDeck";
+import EditDeck from "./pages/EditDeck";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 function Logout() {
@@ -70,6 +71,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AddCard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-deck/:deckName"
+          element={
+            <ProtectedRoute>
+              <EditDeck />
             </ProtectedRoute>
           }
         />

@@ -127,3 +127,25 @@ export const createDeck = async (deckName) => {
     throw error.response.data.detail;
   }
 };
+
+export const getDeck = async (deckName) => {
+  try {
+    const response = await api.get("/deck/get?deck_name=" + deckName);
+    return response.data.payload;
+  } catch (error) {
+    throw error.response.data.detail;
+  }
+};
+
+export const updateDeck = async (deckName, deckNewName, settings) => {
+  try {
+    const response = await api.put("/deck/edit", {
+      "name": deckName,
+      "new_name": deckNewName,
+      "settings": settings,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data.detail;
+  }
+};

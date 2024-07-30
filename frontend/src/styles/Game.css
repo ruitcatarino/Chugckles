@@ -78,3 +78,13 @@
 .play-button:hover {
   background-color: #535bf2;
 }
+
+.blurred-challenge {
+  filter: blur(5px);
+  user-select: none;
+  cursor: pointer;
+}
+
+.blurred-challenge:hover {
+  filter: blur(3px);
+}
