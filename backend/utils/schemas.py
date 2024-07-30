@@ -34,7 +34,8 @@ class DeckCreateSchema(BaseModel):
 
 class DeckEditSchema(BaseModel):
     name: str
-    new_name: str
+    new_name: Optional[str] = ""
+    settings: Optional[dict] = {}
 
 
 class DeckNameSchema(BaseModel):

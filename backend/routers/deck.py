@@ -26,7 +26,7 @@ async def list_all_decks(_: UserSchema = Depends(jwt_required)):
         {
             "id": deck.id,
             "name": deck.name,
-            "settings": deck.settings,
+            "settings": await deck.get_settings(),
             "cards": [
                 {"id": card.id, "challenge": card.challenge} for card in deck.cards
             ],
@@ -48,6 +48,7 @@ async def get_deck(deck_name: str, _: UserSchema = Depends(jwt_required)):
             "cards": [
                 {"id": card.id, "challenge": card.challenge} for card in deck.cards
             ],
+            "settings": await deck.get_settings(),
         },
         "message": "All decks listed",
     }
@@ -57,8 +58,11 @@ async def get_deck(deck_name: str, _: UserSchema = Depends(jwt_required)):
 async def edit_card(deck_body: DeckEditSchema, _: UserSchema = Depends(jwt_required)):
     deck = await Deck.get_or_none(name=deck_body.name)
     if deck is None:
-        raise HTTPException(status_code=404, detail="Card not found")
-    deck.name = deck_body.new_name
+        raise HTTPException(status_code=404, detail="Deck not found")
+    if deck_body.new_name:
+        deck.name = deck_body.new_name
+    if deck_body.settings:
+        deck.settings = deck_body.settings
     await deck.save()
     return {"message": f"{deck} edited"}
 
