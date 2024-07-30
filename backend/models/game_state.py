@@ -68,6 +68,10 @@ class GameState(Model):
         return self.current_card["challenge"]
 
     @property
+    def current_deck(self) -> str:
+        return self.current_card["deck_name"]
+
+    @property
     def current_is_hidden(self) -> bool:
         return self.current_card["is_hidden"]
 
@@ -96,7 +100,12 @@ class GameState(Model):
         if self.all_cards_are_for_all_players:
             self.current_turn += self.n_players
         await self.save()
-        return self.current_challenge, self.current_player, self.current_is_hidden
+        return (
+            self.current_challenge,
+            self.current_deck,
+            self.current_player,
+            self.current_is_hidden,
+        )
 
 
 async def generate_cards(
@@ -106,11 +115,13 @@ async def generate_cards(
     data = []
     cards_in_data = 0
     for card in cards:
+        deck = await card.deck
         data.append(
             {
                 "challenge": card.challenge,
                 "is_for_all_players": await card.is_for_all_players,
                 "is_hidden": await card.is_hidden,
+                "deck_name": deck.name,
             }
         )
         if not await card.is_for_all_players or count_all_players_cards:

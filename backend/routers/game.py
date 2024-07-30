@@ -50,7 +50,7 @@ async def play_game(
     if game.finished:
         {"message": "Game finished"}
     try:
-        challenge, player, is_hidden = await game.get_next_turn()
+        challenge, card_deck_name , player, is_hidden = await game.get_next_turn()
         return {
             "message": "Sucessfully played",
             "payload": {
@@ -59,6 +59,7 @@ async def play_game(
                 "is_hidden": is_hidden,
                 "current_round": game.state.current_round,
                 "total_rounds": game.state.total_rounds,
+                "deck_name": card_deck_name
             },
         }
     except GameFinished:
@@ -129,6 +130,7 @@ async def get_game(game_name: str, user: UserSchema = Depends(jwt_required)):
             "current_player": game.state.current_player,
             "current_challenge": game.state.current_challenge,
             "current_is_hidden": game.state.current_is_hidden,
+            "current_deck_name": game.state.current_deck,
         },
         "message": "Game found",
     }

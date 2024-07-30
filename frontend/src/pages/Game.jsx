@@ -6,6 +6,7 @@ import "../styles/Game.css";
 const Game = () => {
   const [game, setGame] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState(null);
+  const [currentDeck, setCurrentDeck] = useState(null);
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [currentRound, setCurrentRound] = useState(null);
   const [totalRounds, setTotalRounds] = useState(null);
@@ -29,6 +30,7 @@ const Game = () => {
     setCurrentRound(playInfo.current_round);
     setTotalRounds(playInfo.total_rounds);
     setIsHidden(playInfo.is_hidden);
+    setCurrentDeck(playInfo.deck_name);
   };
 
   useEffect(() => {
@@ -42,6 +44,7 @@ const Game = () => {
         setCurrentRound(fetchedGame.current_round);
         setTotalRounds(fetchedGame.total_rounds);
         setIsHidden(fetchedGame.current_is_hidden);
+        setCurrentDeck(fetchedGame.current_deck_name);
       } catch (error) {
         console.error("Failed to fetch game:", error);
       }
@@ -65,6 +68,7 @@ const Game = () => {
             Rounds: {currentRound}/{totalRounds}
           </h1>
         )}
+        <h2 className="game-title">Deck: {currentDeck}</h2>
         <h2 className="game-player">{currentPlayer}</h2>
         <div className="game-info">
           {isHidden ? (
