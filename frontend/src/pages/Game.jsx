@@ -12,10 +12,10 @@ const Game = () => {
   const [totalRounds, setTotalRounds] = useState(null);
   const [isHidden, setIsHidden] = useState(true);
   const navigate = useNavigate();
-  const gameName = window.location.pathname.split("/")[2];
+  const gameId = window.location.pathname.split("/")[2];
 
   const handlePlayGame = async () => {
-    const playInfo = await playGame(gameName);
+    const playInfo = await playGame(gameId);
     if (
       !playInfo ||
       !playInfo.hasOwnProperty("challenge") ||
@@ -36,9 +36,8 @@ const Game = () => {
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        const fetchedGame = await getGame(gameName);
+        const fetchedGame = await getGame(gameId);
         setGame(fetchedGame);
-        console.log("Fetched game:", fetchedGame);
         setCurrentPlayer(fetchedGame.current_player);
         setCurrentChallenge(fetchedGame.current_challenge);
         setCurrentRound(fetchedGame.current_round);
@@ -62,7 +61,7 @@ const Game = () => {
         Go Back
       </button>
       <div className="game-container">
-        <h1 className="game-title">Game: {gameName}</h1>
+        <h1 className="game-title">Game: {game?.name}</h1>
         {(currentRound !== 0 || totalRounds !== 0) && (
           <h1 className="game-title">
             Rounds: {currentRound}/{totalRounds}

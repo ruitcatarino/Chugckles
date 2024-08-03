@@ -49,5 +49,5 @@ class GameStartSchema(BaseModel):
     total_rounds: int
 
 
-class GameNameSchema(BaseModel):
-    name: str
+class GameIdSchema(BaseModel):
+    id: int

@@ -43,7 +43,7 @@ function App() {
           }
         />
         <Route
-          path="/game/:gameName"
+          path="/game/:gameId"
           element={
             <ProtectedRoute>
               <Game />

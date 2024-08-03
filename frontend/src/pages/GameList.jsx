@@ -8,8 +8,8 @@ const GameList = () => {
   const [games, setGames] = useState([]);
   const navigate = useNavigate();
 
-  const handlePlayGame = (gameName) => {
-    navigate(`/game/${gameName}`);
+  const handlePlayGame = (gameId) => {
+    navigate(`/game/${gameId}`);
   };
 
   const handleCreateNewGame = () => {
@@ -21,7 +21,6 @@ const GameList = () => {
       try {
         const fetchedGames = await getGames();
         setGames(fetchedGames.data.payload);
-        console.log("Fetched games:", fetchedGames);
       } catch (error) {
         console.error("Failed to fetch games:", error);
       }
@@ -43,7 +42,7 @@ const GameList = () => {
             <p>
               Current Round: {game.current_round} / {game.total_rounds}
             </p>
-            <button onClick={() => handlePlayGame(game.name)}>
+            <button onClick={() => handlePlayGame(game.id)}>
               {game.is_finished ? "View Game" : "Play Game"}
             </button>
           </div>

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from models import Game, User
 from utils.authentication import jwt_required
 from utils.exceptions import GameFinished
-from utils.schemas import GameNameSchema, GameStartSchema, UserSchema
+from utils.schemas import GameIdSchema, GameStartSchema, UserSchema
 
 router = APIRouter(
     prefix="/game",
@@ -37,15 +37,15 @@ async def start_game(
 
 @router.post("/play")
 async def play_game(
-    game_info: GameNameSchema, user_info: UserSchema = Depends(jwt_required)
+    game_info: GameIdSchema, user_info: UserSchema = Depends(jwt_required)
 ):
     user = await User.get(username=user_info.username)
-    game = await Game.get_or_none(name=game_info.name, creator=user).prefetch_related(
+    game = await Game.get_or_none(id=game_info.id, creator=user).prefetch_related(
         "state"
     )
     if game is None:
         raise HTTPException(
-            status_code=404, detail=f"Game with {game_info.name} does not exists"
+            status_code=404, detail=f"Game with {game_info.id} does not exists"
         )
     if game.finished:
         {"message": "Game finished"}
@@ -110,13 +110,13 @@ async def list_all_user_games(user: UserSchema = Depends(jwt_required)):
 
 
 @router.get("/get")
-async def get_game(game_name: str, user: UserSchema = Depends(jwt_required)):
+async def get_game(game_id: int, user: UserSchema = Depends(jwt_required)):
     user = await User.get(username=user.username)
     game = await Game.get_or_none(
-        name=game_name, creator=user, finished=False
+        id=game_id, creator=user, finished=False
     ).prefetch_related("state", "decks")
     if game is None:
-        raise HTTPException(status_code=404, detail=f"Game with {game_name} not found")
+        raise HTTPException(status_code=404, detail=f"Game with {game_id} not found")
     return {
         "payload": {
             "id": game.id,
@@ -137,15 +137,15 @@ async def get_game(game_name: str, user: UserSchema = Depends(jwt_required)):
 
 
 @router.post("/end")
-async def end_game(game_info: GameNameSchema, user: UserSchema = Depends(jwt_required)):
-    game = await Game.get_or_none(name=game_info.name, creator=user)
+async def end_game(game_info: GameIdSchema, user: UserSchema = Depends(jwt_required)):
+    game = await Game.get_or_none(id=game_info.id, creator=user)
     if game is None:
         raise HTTPException(
-            status_code=404, detail=f"Game with {game_info.name} not found"
+            status_code=404, detail=f"Game with {game_info.id} not found"
         )
     if await game.is_finished:
         raise HTTPException(
-            status_code=404, detail=f"Game with {game_info.name} already ended"
+            status_code=404, detail=f"Game with {game_info.id} already ended"
         )
     await game.finish()
     return {"message": f"{game} ended"}

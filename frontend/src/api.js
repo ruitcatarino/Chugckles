@@ -53,18 +53,18 @@ export const getDecks = () => api.get("/deck/list");
 
 export const getGames = () => api.get("/game/list");
 
-export const getGame = async (gameName) => {
+export const getGame = async (gameId) => {
   try {
-    const response = await api.get("/game/get?game_name=" + gameName);
+    const response = await api.get("/game/get?game_id=" + gameId);
     return response.data.payload;
   } catch (error) {
     throw error.response.data.detail;
   }
 };
 
-export const playGame = async (gameName) => {
+export const playGame = async (gameId) => {
   try {
-    const response = await api.post("/game/play", { name: gameName });
+    const response = await api.post("/game/play", { id: gameId });
     return response.data.payload;
   } catch (error) {
     throw error.response.data.detail;
