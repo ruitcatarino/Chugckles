@@ -40,9 +40,7 @@ async def play_game(
     game_info: GameIdSchema, user_info: UserSchema = Depends(jwt_required)
 ):
     user = await User.get(username=user_info.username)
-    game = await Game.get_or_none(id=game_info.id, creator=user).prefetch_related(
-        "state"
-    )
+    game = await Game.get_or_none(id=game_info.id, creator=user)
     if game is None:
         raise HTTPException(
             status_code=404, detail=f"Game with {game_info.id} does not exists"
@@ -50,16 +48,16 @@ async def play_game(
     if game.finished:
         {"message": "Game finished"}
     try:
-        challenge, card_deck_name , player, is_hidden = await game.get_next_turn()
+        challenge, deck_name , player, is_hidden = await game.get_next_turn()
         return {
             "message": "Sucessfully played",
             "payload": {
                 "challenge": challenge,
                 "player": player,
                 "is_hidden": is_hidden,
-                "current_round": game.state.current_round,
-                "total_rounds": game.state.total_rounds,
-                "deck_name": card_deck_name
+                "current_round": await game.current_round,
+                "total_rounds": game.total_rounds,
+                "deck_name": deck_name
             },
         }
     except GameFinished:
@@ -73,18 +71,17 @@ async def list_user_games(user: UserSchema = Depends(jwt_required)):
     games = (
         await Game.filter(creator=user, finished=False).prefetch_related("decks").all()
     )
-    states = [await game.state for game in games]
     games_list = [
         {
             "id": game.id,
             "name": game.name,
             "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
             "is_finished": game.finished,
-            "challenges": state.challenges,
-            "current_round": state.current_round,
-            "total_rounds": state.total_rounds,
+            "challenges": await game.challenges,
+            "current_round": await game.current_round,
+            "total_rounds": game.total_rounds,
         }
-        for game, state in zip(games, states)
+        for game in games
     ]
     return {"payload": games_list, "message": "Unfinished games listed"}
 
@@ -93,18 +90,17 @@ async def list_user_games(user: UserSchema = Depends(jwt_required)):
 async def list_all_user_games(user: UserSchema = Depends(jwt_required)):
     user = await User.get(username=user.username)
     games = await Game.filter(creator=user).prefetch_related("decks").all()
-    states = [await game.state for game in games]
     games_list = [
         {
             "id": game.id,
             "name": game.name,
             "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
-            "is_finished": game.finished,
-            "challenges": state.challenges,
-            "current_round": state.current_round,
-            "total_rounds": state.total_rounds,
+            "is_finished": await game.finished,
+            "challenges": await game.challenges,
+            "current_round": await game.current_round,
+            "total_rounds": await game.total_rounds,
         }
-        for game, state in zip(games, states)
+        for game in games
     ]
     return {"payload": games_list, "message": "All games listed"}
 
@@ -114,23 +110,24 @@ async def get_game(game_id: int, user: UserSchema = Depends(jwt_required)):
     user = await User.get(username=user.username)
     game = await Game.get_or_none(
         id=game_id, creator=user, finished=False
-    ).prefetch_related("state", "decks")
+    ).prefetch_related("decks")
     if game is None:
         raise HTTPException(status_code=404, detail=f"Game with {game_id} not found")
+    deck = await game.current_deck
     return {
         "payload": {
             "id": game.id,
             "name": game.name,
             "decks": [{"id": deck.id, "name": deck.name} for deck in game.decks],
             "is_finished": game.finished,
-            "challenges": game.state.challenges,
-            "current_round": game.state.current_round,
-            "total_rounds": game.state.total_rounds,
-            "current_turn": game.state.current_turn,
-            "current_player": game.state.current_player,
-            "current_challenge": game.state.current_challenge,
-            "current_is_hidden": game.state.current_is_hidden,
-            "current_deck_name": game.state.current_deck,
+            "challenges": await game.challenges,
+            "current_round": await game.current_round,
+            "total_rounds": game.total_rounds,
+            "current_turn": game.current_turn,
+            "current_player": await game.current_player,
+            "current_challenge": await game.current_challenge,
+            "current_is_hidden": await game.current_is_hidden,
+            "current_deck_name": deck.name,
         },
         "message": "Game found",
     }
