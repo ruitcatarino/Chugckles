@@ -13,7 +13,6 @@ const EditDeck = () => {
 
   useEffect(() => {
     const fetchDeck = async () => {
-      console.log(deckId);
       try {
         const response = await getDeck(deckId);
         setDeck(response);

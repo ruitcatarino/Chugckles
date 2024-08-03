@@ -13,7 +13,6 @@ const Deck = () => {
       try {
         const fetchedDecks = await getDecks();
         setDecks(fetchedDecks.data.payload);
-        console.log("Fetched decks:", fetchedDecks);
       } catch (error) {
         console.error("Failed to fetch decks:", error);
       }

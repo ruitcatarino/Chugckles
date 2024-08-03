@@ -17,7 +17,6 @@ const CreateGame = () => {
       try {
         const fetchedDecks = await getDecks();
         setAvailableDecks(fetchedDecks.data.payload);
-        console.log("Fetched decks:", fetchedDecks);
       } catch (error) {
         console.error("Failed to fetch decks:", error);
       }
@@ -64,7 +63,6 @@ const CreateGame = () => {
         players.filter((p) => p.trim()),
         rounds
       );
-      console.log(message);
       navigate(`/games-list`);
     } catch (error) {
       console.error("Error creating game:", error);
