@@ -62,7 +62,7 @@ class Game(Model):
             assert total_turns < await count_cards_not_for_all_players(
                 cards
             ), "Not enough cards"
-
+        
         game = await super().create(
             name=name,
             creator=creator,
@@ -154,6 +154,9 @@ class Game(Model):
         ):
             self.current_turn += 1
 
+        if self.current_turn % self.n_players == 0:
+            random.shuffle(self.players)
+            
         await self.draw_card()
         await self.save()
 
