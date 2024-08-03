@@ -48,16 +48,17 @@ async def play_game(
     if game.finished:
         {"message": "Game finished"}
     try:
-        challenge, deck_name , player, is_hidden = await game.get_next_turn()
+        await game.increment_turn()
+        deck = await game.current_deck
         return {
             "message": "Sucessfully played",
             "payload": {
-                "challenge": challenge,
-                "player": player,
-                "is_hidden": is_hidden,
+                "challenge": await game.current_challenge,
+                "player": await game.current_player,
+                "is_hidden": await game.current_is_hidden,
                 "current_round": await game.current_round,
                 "total_rounds": game.total_rounds,
-                "deck_name": deck_name
+                "deck_name": deck.name,
             },
         }
     except GameFinished:
